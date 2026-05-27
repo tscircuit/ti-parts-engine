@@ -11,6 +11,10 @@ export interface KicadArchiveSummary {
   footprintEntries: string[];
 }
 
+export interface ExtractArchiveEntriesOptions {
+  resolveEntryPath?: (entryName: string, entryIndex: number) => string;
+}
+
 export async function createArchiveRunDirectory(
   tempRoot: string,
   runLabel: string,
@@ -64,18 +68,37 @@ export async function extractArchiveEntries(
   archive: JSZip,
   entryNames: string[],
   extractionRoot: string,
+  options: ExtractArchiveEntriesOptions = {},
 ) {
-  for (const entryName of entryNames) {
+  for (const [entryIndex, entryName] of entryNames.entries()) {
     const zipEntry = archive.file(entryName);
     if (!zipEntry) {
       continue;
     }
 
-    const destinationPath = resolveZipEntryPath(extractionRoot, entryName);
+    const resolvedEntryPath =
+      options.resolveEntryPath?.(entryName, entryIndex) ?? entryName;
+    const destinationPath = resolveZipEntryPath(
+      extractionRoot,
+      resolvedEntryPath,
+    );
     await mkdir(dirname(destinationPath), { recursive: true });
     const content = await zipEntry.async("uint8array");
     await writeFile(destinationPath, content);
   }
+}
+
+export function createKicadSymbolEntryPathResolver(symbolName: string) {
+  const safeSymbolName = sanitizeFileStem(symbolName);
+
+  return (entryName: string, entryIndex: number) => {
+    const pathSegments = splitArchiveEntryPath(entryName);
+    const parentSegments = pathSegments.slice(0, -1);
+    const suffix = entryIndex === 0 ? "" : `-${entryIndex + 1}`;
+    return [...parentSegments, `${safeSymbolName}${suffix}.kicad_sym`].join(
+      "/",
+    );
+  };
 }
 
 export function resolveZipEntryPath(rootDir: string, entryName: string) {
@@ -114,4 +137,27 @@ export function sanitizeRunLabel(runLabel: string) {
   }
 
   return normalizedLabel;
+}
+
+export function sanitizeFileStem(fileStem: string) {
+  const normalizedStem = fileStem
+    .trim()
+    .replace(/[^A-Za-z0-9._-]+/g, "_")
+    .replace(/^[_-]+|[_-]+$/g, "");
+
+  if (normalizedStem.length === 0) {
+    throw new Error(
+      "fileStem must include at least one filename-safe character.",
+    );
+  }
+
+  return normalizedStem;
+}
+
+function splitArchiveEntryPath(entryName: string) {
+  return entryName
+    .split(/[\\/]+/)
+    .filter(
+      (segment) => segment.length > 0 && segment !== "." && segment !== "..",
+    );
 }

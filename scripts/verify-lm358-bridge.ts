@@ -8,6 +8,7 @@ import {
   DEFAULT_IMPORTS_ROOT,
   assertKicadArchiveSummary,
   createArchiveRunDirectory,
+  createKicadSymbolEntryPathResolver,
   extractArchiveEntries,
   loadKicadArchive,
   summarizeKicadArchive,
@@ -67,6 +68,9 @@ await extractArchiveEntries(
   archive,
   archiveSummary.symbolEntries,
   extractedRoot,
+  {
+    resolveEntryPath: createKicadSymbolEntryPathResolver(LM358_MPN),
+  },
 );
 await extractArchiveEntries(
   archive,
@@ -79,6 +83,6 @@ console.log(`Found .kicad_sym entries: ${archiveSummary.symbolEntries.length}`);
 console.log(
   `Found .kicad_mod entries: ${archiveSummary.footprintEntries.length}`,
 );
-console.log(`Example symbol: ${archiveSummary.symbolEntries[0]}`);
+console.log(`Extracted symbol filename: ${LM358_MPN}.kicad_sym`);
 console.log(`Example footprint: ${archiveSummary.footprintEntries[0]}`);
 console.log(`Extracted matching KiCad files under: ${extractedRoot}`);
