@@ -47,8 +47,14 @@ if (searchResponse.results.length === 0) {
   throw new Error(`Search succeeded but returned no ${LM358_MPN} results.`);
 }
 
+const firstSearchResult = searchResponse.results[0];
+
+if (!firstSearchResult) {
+  throw new Error(`Search succeeded but returned no ${LM358_MPN} results.`);
+}
+
 console.log(
-  `Search returned ${searchResponse.results.length} result(s); first result: ${describeSearchResult(searchResponse.results[0])}`,
+  `Search returned ${searchResponse.results.length} result(s); first result: ${describeSearchResult(firstSearchResult)}`,
 );
 
 const zipPath = `${runRoot}/${LM358_MPN}_KiCADv${DEFAULT_KICAD_VERSION}.zip`;

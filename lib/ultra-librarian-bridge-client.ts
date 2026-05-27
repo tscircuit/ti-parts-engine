@@ -2,7 +2,9 @@ export const DEFAULT_BASE_URL =
   "https://situations-build-tommy-integrate.trycloudflare.com";
 export const DEFAULT_KICAD_VERSION = 6;
 
-export type JsonRecord = Record<string, unknown>;
+export type JsonPrimitive = string | number | boolean | null;
+export type JsonValue = JsonPrimitive | JsonObject | JsonValue[];
+export type JsonObject = { [key: string]: JsonValue | undefined };
 export type BridgeFetch = (
   input: string | URL,
   init?: RequestInit,
@@ -25,9 +27,17 @@ export interface SearchPartsRequest {
   limit?: number;
 }
 
+export interface SearchPartResult extends JsonObject {
+  mpn?: string;
+  manufacturer_part_number?: string;
+  part_number?: string;
+  gpn?: string;
+  name?: string;
+}
+
 export interface SearchPartsResponse {
-  rawPayload: unknown;
-  results: unknown[];
+  rawPayload: JsonValue;
+  results: SearchPartResult[];
 }
 
 export interface KicadExportRequest {
@@ -134,7 +144,7 @@ export async function requestJson(options: {
   path: string;
   partnerToken: string;
   logger?: BridgeLogger;
-}) {
+}): Promise<JsonValue> {
   const url = buildRequestUrl(options.baseUrl, options.path);
   logRequest(options.logger, url);
 
@@ -148,7 +158,7 @@ export async function requestJson(options: {
     );
   }
 
-  return (await response.json()) as unknown;
+  return asJsonValue(await response.json());
 }
 
 export async function requestArchive(options: {
@@ -192,30 +202,26 @@ export async function readErrorBody(response: Response) {
   return bodyText.length > 0 ? bodyText : "<empty response body>";
 }
 
-export function extractSearchResults(payload: unknown) {
+export function extractSearchResults(payload: JsonValue) {
   if (Array.isArray(payload)) {
-    return payload;
+    return payload.filter(isSearchPartResult);
   }
 
-  if (!isJsonRecord(payload)) {
+  if (!isJsonObject(payload)) {
     return [];
   }
 
   for (const key of ["results", "items", "parts", "data"]) {
     const value = payload[key];
     if (Array.isArray(value)) {
-      return value;
+      return value.filter(isSearchPartResult);
     }
   }
 
   return [];
 }
 
-export function describeSearchResult(result: unknown) {
-  if (!isJsonRecord(result)) {
-    return "unrecognized result shape";
-  }
-
+export function describeSearchResult(result: SearchPartResult) {
   for (const key of [
     "mpn",
     "manufacturer_part_number",
@@ -232,8 +238,14 @@ export function describeSearchResult(result: unknown) {
   return "result present but no recognized identifier field";
 }
 
-export function isJsonRecord(value: unknown): value is JsonRecord {
+export function isJsonObject(value: unknown): value is JsonObject {
   return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+
+export function isSearchPartResult(
+  value: JsonValue,
+): value is SearchPartResult {
+  return isJsonObject(value);
 }
 
 function buildRequestUrl(baseUrl: string, path: string) {
@@ -263,4 +275,8 @@ function assertPositiveInteger(name: string, value: number) {
   if (!Number.isInteger(value) || value < 1) {
     throw new Error(`${name} must be a positive integer.`);
   }
+}
+
+function asJsonValue(value: unknown): JsonValue {
+  return value as JsonValue;
 }
