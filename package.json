@@ -4,14 +4,19 @@
   "private": true,
   "type": "module",
   "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
   "files": [
     "dist"
   ],
   "scripts": {
     "build": "tsup index.ts --format esm --dts --sourcemap",
     "test": "bun test",
-    "verify:lm358-bridge": "bun run scripts/verify-lm358-bridge.ts",
-    "test:lm358-bridge": "bun run verify:lm358-bridge",
     "typecheck": "bunx tsc --noEmit",
     "format": "biome format . --write",
     "format:check": "biome format ."
@@ -19,7 +24,6 @@
   "devDependencies": {
     "@biomejs/biome": "^2.2.4",
     "@types/bun": "^1.2.22",
-    "jszip": "^3.10.1",
     "tsup": "^8.5.0",
     "typescript": "^5.9.3"
   },
