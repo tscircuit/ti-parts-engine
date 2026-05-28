@@ -7,6 +7,7 @@ export type CapturedHttpRequest = {
 };
 
 type TestServerOptions = {
+  searchResults?: Array<Record<string, unknown>>;
   searchResponseBody?: string;
   archiveResponseBody?: Buffer;
   archiveContentType?: string;
@@ -18,7 +19,7 @@ export const getTestServer = async (options: TestServerOptions = {}) => {
   const capturedRequests: CapturedHttpRequest[] = [];
   const searchResponseBody =
     options.searchResponseBody ??
-    JSON.stringify({ results: [{ mpn: "LM358" }] });
+    JSON.stringify({ results: options.searchResults ?? [{ mpn: "LM358" }] });
   const archiveResponseBody =
     options.archiveResponseBody ?? Buffer.from("zip-bytes");
   const archiveContentType = options.archiveContentType ?? "application/zip";

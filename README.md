@@ -87,14 +87,3 @@ PARTNER_TOKEN=... bun examples/root-circuit-platform-config.tsx
 The example reads `PARTNER_TOKEN` from the local environment, creates the TI
 parts engine, passes it to `new RootCircuit({ platform: { partsEngine } })`,
 adds an `LM358` chip, renders the circuit, and prints Circuit JSON.
-
-TODO: the current TI parts engine resolves supplier part numbers through the
-bridge search flow. Automatic `fetchPartCircuitJson` / footprint generation for
-arbitrary TI parts is not implemented yet.
-
-## Safety notes
-
-- `.env`, `.env.local`, `imports/`, `.tmp/`, and other temporary output are ignored by git
-- real partner tokens are read from local env files only and are never logged
-- downloaded Ultra Librarian/TI zip files and extracted KiCad files must stay in ignored local output only
-- this PR only adds code, tooling, config examples, and tests

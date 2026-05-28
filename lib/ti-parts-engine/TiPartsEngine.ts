@@ -1,3 +1,5 @@
+import type { PartsEngine } from "@tscircuit/props";
+
 import { createUltraLibrarianBridgeClient } from "../ultra-librarian-bridge-client";
 import type {
   DownloadKicadArchiveResponse,
@@ -5,13 +7,14 @@ import type {
 } from "../ultra-librarian-bridge-client";
 import type {
   DownloadKicadArchiveParams,
-  FindTiPartParams,
   SearchPartsParams,
   TiPartsEngineOptions,
-  TiSupplierPartNumbers,
 } from "./types";
 
-export class TiPartsEngine {
+type FindPartParams = Parameters<PartsEngine["findPart"]>[0];
+type FindPartResult = Awaited<ReturnType<PartsEngine["findPart"]>>;
+
+export class TiPartsEngine implements PartsEngine {
   private readonly options: TiPartsEngineOptions;
 
   constructor(options: TiPartsEngineOptions) {
@@ -21,11 +24,8 @@ export class TiPartsEngine {
     this.findPart = this.findPart.bind(this);
   }
 
-  async findPart({
-    sourceComponent,
-  }: FindTiPartParams): Promise<TiSupplierPartNumbers> {
-    const manufacturerPartNumber =
-      sourceComponent.manufacturer_part_number?.trim();
+  async findPart({ sourceComponent }: FindPartParams): Promise<FindPartResult> {
+    const manufacturerPartNumber = getManufacturerPartNumber(sourceComponent);
 
     if (!manufacturerPartNumber) {
       return {};
@@ -50,7 +50,7 @@ export class TiPartsEngine {
 
     return {
       ti: [resolvedPartNumber],
-    };
+    } as FindPartResult;
   }
 
   async searchParts(request: SearchPartsParams): Promise<SearchPartsResponse> {
@@ -66,4 +66,17 @@ export class TiPartsEngine {
   private createClient() {
     return createUltraLibrarianBridgeClient(this.options);
   }
+}
+
+function getManufacturerPartNumber(sourceComponent: unknown) {
+  if (!isRecord(sourceComponent)) {
+    return null;
+  }
+
+  const value = sourceComponent.manufacturer_part_number;
+  return typeof value === "string" && value.trim() ? value : null;
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return Boolean(value) && typeof value === "object" && !Array.isArray(value);
 }
