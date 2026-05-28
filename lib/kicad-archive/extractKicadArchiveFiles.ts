@@ -12,6 +12,10 @@ import type {
   KicadArchiveEntry,
 } from "./types";
 
+type ZipEntryWithUnsafeOriginalName = JSZip.JSZipObject & {
+  unsafeOriginalName?: string;
+};
+
 export async function extractKicadArchiveFiles(
   request: ExtractKicadArchiveFilesRequest,
 ): Promise<ExtractKicadArchiveFilesResponse> {
@@ -26,10 +30,11 @@ export async function extractKicadArchiveFiles(
     const kind = getKicadArchiveEntryKind(zipEntry.name);
     if (!kind) continue;
 
-    const outputPath = getSafeOutputPath(outputDirectory, zipEntry.name);
+    const archivePath = getSafeArchivePath(zipEntry);
+    const outputPath = getSafeOutputPath(outputDirectory, archivePath);
     const entry = {
-      path: zipEntry.name,
-      fileName: basename(zipEntry.name),
+      path: archivePath,
+      fileName: basename(archivePath),
       kind,
     };
 
@@ -57,7 +62,19 @@ export async function extractKicadArchiveFiles(
   };
 }
 
-function getSafeOutputPath(outputDirectory: string, archivePath: string) {
+function getSafeArchivePath(zipEntry: JSZip.JSZipObject) {
+  const unsafeOriginalName = (zipEntry as ZipEntryWithUnsafeOriginalName)
+    .unsafeOriginalName;
+
+  if (unsafeOriginalName) {
+    assertSafeArchivePath(unsafeOriginalName);
+  }
+
+  assertSafeArchivePath(zipEntry.name);
+  return zipEntry.name;
+}
+
+function assertSafeArchivePath(archivePath: string) {
   const normalizedArchivePath = normalize(archivePath);
 
   if (
@@ -69,6 +86,12 @@ function getSafeOutputPath(outputDirectory: string, archivePath: string) {
   ) {
     throw new Error(`Unsafe KiCad archive path: ${archivePath}`);
   }
+}
+
+function getSafeOutputPath(outputDirectory: string, archivePath: string) {
+  const normalizedArchivePath = normalize(archivePath);
+
+  assertSafeArchivePath(archivePath);
 
   const outputPath = resolve(
     outputDirectory,
