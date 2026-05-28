@@ -1,5 +1,7 @@
-import { requestArchive, requestJson, normalizeBaseUrl } from "./http";
+import { normalizeBaseUrl } from "./normalizeBaseUrl";
 import { buildKicadExportPath, buildSearchPath } from "./paths";
+import { requestArchive } from "./requestArchive";
+import { requestJson } from "./requestJson";
 import { extractSearchResults } from "./search-response";
 import { DEFAULT_BASE_URL } from "./types";
 import type {
