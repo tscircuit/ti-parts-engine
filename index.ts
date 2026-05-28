@@ -1,1 +1,1 @@
-export * from "./lib/ultra-librarian-bridge-client";
+export * from "./lib/ti-parts-engine";

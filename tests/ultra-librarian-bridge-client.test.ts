@@ -1,116 +1,64 @@
-import { describe, expect, mock, test } from "bun:test";
+import { expect, test } from "bun:test";
 
-import {
-  buildKicadExportPath,
-  buildSearchPath,
-  createBridgeHeaders,
-  createUltraLibrarianBridgeClient,
-  describeSearchResult,
-  extractSearchResults,
-  normalizeBaseUrl,
-} from "../lib/ultra-librarian-bridge-client";
+import { DEFAULT_KICAD_VERSION, TiPartsEngine } from "../index";
+import { FakeUltraLibrarianBridgeServer } from "./fixtures/FakeUltraLibrarianBridgeServer";
 
-describe("ultra-librarian-bridge-client", () => {
-  test("buildSearchPath matches the pilot endpoint contract", () => {
-    expect(buildSearchPath({ query: "LM358", exactOnly: true, limit: 1 })).toBe(
-      "/v1/parts/search?q=LM358&exact_only=true&limit=1",
-    );
+const getCapturedRequest = (
+  fakeBridgeServer: FakeUltraLibrarianBridgeServer,
+  requestIndex: number,
+) => {
+  const capturedRequest = fakeBridgeServer.capturedRequests[requestIndex];
+  if (!capturedRequest) {
+    throw new Error(`Expected request ${requestIndex + 1} to be captured`);
+  }
+  return capturedRequest;
+};
+
+test("ti parts engine uses the package entrypoint against the bridge API", async () => {
+  const archiveBuffer = Buffer.from("zip-bytes");
+  const fakeBridgeServer = new FakeUltraLibrarianBridgeServer({
+    archiveResponseBody: archiveBuffer,
   });
+  fakeBridgeServer.start();
 
-  test("buildKicadExportPath matches the pilot endpoint contract", () => {
-    expect(buildKicadExportPath({ mpn: "LM358", version: 6 })).toBe(
-      "/v1/export/kicad?mpn=LM358&version=6",
-    );
-  });
-
-  test("normalizeBaseUrl removes trailing slashes", () => {
-    expect(normalizeBaseUrl("https://example.com///")).toBe(
-      "https://example.com",
-    );
-  });
-
-  test("createBridgeHeaders uses bearer auth without mutating token", () => {
-    expect(createBridgeHeaders("secret-token", "application/json")).toEqual({
-      Authorization: "Bearer secret-token",
-      Accept: "application/json",
-    });
-  });
-
-  test("extractSearchResults handles common wrapped payloads", () => {
-    expect(extractSearchResults({ results: [{ mpn: "LM358" }] })).toEqual([
-      { mpn: "LM358" },
-    ]);
-    expect(extractSearchResults({ parts: [{ mpn: "LM358" }] })).toEqual([
-      { mpn: "LM358" },
-    ]);
-    expect(extractSearchResults([{ mpn: "LM358" }])).toEqual([
-      { mpn: "LM358" },
-    ]);
-  });
-
-  test("describeSearchResult picks a human-readable identifier", () => {
-    expect(describeSearchResult({ manufacturer_part_number: "LM358DR" })).toBe(
-      "LM358DR",
-    );
-    expect(describeSearchResult({ foo: "bar" })).toBe(
-      "result present but no recognized identifier field",
-    );
-  });
-
-  test("searchParts uses the expected request URL and auth header", async () => {
-    const fetchMock = mock(async (input: string | URL, init?: RequestInit) => {
-      expect(String(input)).toBe(
-        "https://example.com/v1/parts/search?q=LM358&exact_only=true&limit=1",
-      );
-
-      const headers = new Headers(init?.headers);
-      expect(headers.get("authorization")).toBe("Bearer secret-token");
-      expect(headers.get("accept")).toBe("application/json");
-
-      return new Response(JSON.stringify({ results: [{ mpn: "LM358" }] }), {
-        status: 200,
-        headers: {
-          "content-type": "application/json",
-        },
-      });
-    });
-
-    const client = createUltraLibrarianBridgeClient({
+  try {
+    const tiPartsEngine = new TiPartsEngine({
       partnerToken: "secret-token",
-      baseUrl: "https://example.com/",
-      fetch: fetchMock,
+      baseUrl: fakeBridgeServer.origin,
     });
 
-    const response = await client.searchParts({ query: "LM358" });
-
-    expect(fetchMock).toHaveBeenCalledTimes(1);
-    expect(response.results).toEqual([{ mpn: "LM358" }]);
-  });
-
-  test("downloadKicadArchive returns the response buffer", async () => {
-    const archiveBuffer = Buffer.from("zip-bytes");
-    const fetchMock = mock(async (_input: string | URL, init?: RequestInit) => {
-      const headers = new Headers(init?.headers);
-      expect(headers.get("authorization")).toBe("Bearer secret-token");
-      expect(headers.get("accept")).toBe("application/zip");
-
-      return new Response(archiveBuffer, {
-        status: 200,
-        headers: {
-          "content-type": "application/zip",
-        },
-      });
+    const searchResponse = await tiPartsEngine.searchParts({ query: "LM358" });
+    const archiveResponse = await tiPartsEngine.downloadKicadArchive({
+      mpn: "LM358",
     });
 
-    const client = createUltraLibrarianBridgeClient({
-      partnerToken: "secret-token",
-      fetch: fetchMock,
-    });
+    expect(searchResponse.results).toEqual([{ mpn: "LM358" }]);
+    expect(archiveResponse.contentType).toBe("application/zip");
+    expect(Buffer.compare(archiveResponse.archiveBuffer, archiveBuffer)).toBe(
+      0,
+    );
+    expect(fakeBridgeServer.capturedRequests).toHaveLength(2);
 
-    const response = await client.downloadKicadArchive({ mpn: "LM358" });
+    const searchRequest = getCapturedRequest(fakeBridgeServer, 0);
+    expect(searchRequest.pathname).toBe("/v1/parts/search");
+    expect(searchRequest.search).toBe("?q=LM358&exact_only=true&limit=1");
+    expect(searchRequest.method).toBe("GET");
+    expect(searchRequest.headers.get("authorization")).toBe(
+      "Bearer secret-token",
+    );
+    expect(searchRequest.headers.get("accept")).toBe("application/json");
 
-    expect(fetchMock).toHaveBeenCalledTimes(1);
-    expect(response.contentType).toBe("application/zip");
-    expect(Buffer.compare(response.archiveBuffer, archiveBuffer)).toBe(0);
-  });
+    const archiveRequest = getCapturedRequest(fakeBridgeServer, 1);
+    expect(archiveRequest.pathname).toBe("/v1/export/kicad");
+    expect(archiveRequest.search).toBe(
+      `?mpn=LM358&version=${DEFAULT_KICAD_VERSION}`,
+    );
+    expect(archiveRequest.method).toBe("GET");
+    expect(archiveRequest.headers.get("authorization")).toBe(
+      "Bearer secret-token",
+    );
+    expect(archiveRequest.headers.get("accept")).toBe("application/zip");
+  } finally {
+    await fakeBridgeServer.stop();
+  }
 });

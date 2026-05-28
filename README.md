@@ -10,15 +10,17 @@ This PR keeps the initial scope intentionally small:
 - build, typecheck, test, and formatting tooling
 - local env example for partner-token based development
 - safe gitignore rules for env files, build output, and local generated artifacts
+- bootstrap Bun config and CI workflows
 - initial shared package structure for follow-up TI parts work
-- a typed Ultra Librarian bridge client with unit tests
+- a typed Ultra Librarian bridge client surfaced through a small parts engine API
 
 ## Repo shape
 
 `ti-parts-engine` should stay close to `@tscircuit/parts-engine` in overall package layout:
 
 - `index.ts` for package exports
-- `lib/ultra-librarian-bridge-client.ts` for the bridge HTTP client
+- `lib/ti-parts-engine/` for the package-level engine API
+- `lib/ultra-librarian-bridge-client/` for the lower-level bridge client
 - `tests/` for secret-free Bun tests
 
 ## Local setup
