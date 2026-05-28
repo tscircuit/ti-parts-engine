@@ -19,7 +19,8 @@
     "test": "bun test",
     "typecheck": "bunx tsc --noEmit",
     "format": "biome format . --write",
-    "format:check": "biome format ."
+    "format:check": "biome format .",
+    "verify:lm358-bridge": "bun run scripts/verify-lm358-bridge.ts"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.2.4",
