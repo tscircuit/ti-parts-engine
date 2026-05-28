@@ -37,6 +37,10 @@ export class TiPartsEngine {
       limit: 1,
     });
     const matchingPart = searchResponse.results[0];
+    if (!matchingPart) {
+      return {};
+    }
+
     const resolvedPartNumber =
       matchingPart?.mpn ??
       matchingPart?.manufacturer_part_number ??
