@@ -73,9 +73,17 @@ The script uses
 `GET /v1/export/kicad?mpn=LM358&version=6`. It writes the downloaded zip and
 extracted KiCad files under ignored `imports/` output only.
 
-## Safety notes
+## TSX platform parts engine example
 
-- `.env`, `.env.local`, `imports/`, `.tmp/`, and other temporary output are ignored by git
-- real partner tokens are read from local env files only and are never logged
-- downloaded Ultra Librarian/TI zip files and extracted KiCad files must stay in ignored local output only
-- this PR only adds code, tooling, config examples, and tests
+`createTiPlatformPartsEngine` returns an object compatible with
+`platform.partsEngine` in tscircuit. The example in
+[`examples/root-circuit-platform-config.tsx`](./examples/root-circuit-platform-config.tsx)
+shows a `RootCircuit` configured with the TI parts engine:
+
+```bash
+PARTNER_TOKEN=... bun examples/root-circuit-platform-config.tsx
+```
+
+The example reads `PARTNER_TOKEN` from the local environment, creates the TI
+parts engine, passes it to `new RootCircuit({ platform: { partsEngine } })`,
+adds an `LM358` chip, renders the circuit, and prints Circuit JSON.
