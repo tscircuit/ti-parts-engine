@@ -87,3 +87,39 @@ PARTNER_TOKEN=... bun examples/root-circuit-platform-config.tsx
 The example reads `PARTNER_TOKEN` from the local environment, creates the TI
 parts engine, passes it to `new RootCircuit({ platform: { partsEngine } })`,
 adds an `LM358` chip, renders the circuit, and prints Circuit JSON.
+
+## TI footprint library
+
+Use `createTiFootprintLibrary` when you want to resolve a `ti:` footprint
+string into Circuit JSON from a KiCad archive without writing vendor files to
+disk:
+
+```ts
+import { createTiFootprintLibrary } from "@tscircuit/ti-parts-engine"
+
+const loadTiFootprint = createTiFootprintLibrary({
+  partnerToken: process.env.PARTNER_TOKEN!,
+})
+
+const result = await loadTiFootprint("MSP430")
+```
+
+For a ready-to-use platform config that wires both `partsEngine` and
+`footprintLibraryMap.ti`, use `createTiPlatformConfig`:
+
+```ts
+import { RootCircuit } from "tscircuit"
+import { createTiPlatformConfig } from "@tscircuit/ti-parts-engine"
+
+const circuit = new RootCircuit({
+  platform: createTiPlatformConfig({
+    partnerToken: process.env.PARTNER_TOKEN!,
+  }),
+})
+
+circuit.add(
+  <board width="20mm" height="20mm">
+    <chip name="U1" footprint="ti:MSP430" />
+  </board>,
+)
+```

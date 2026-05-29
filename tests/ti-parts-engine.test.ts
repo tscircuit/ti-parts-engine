@@ -1,6 +1,11 @@
 import { expect, test } from "bun:test";
+import JSZip from "jszip";
 
-import { DEFAULT_KICAD_VERSION, TiPartsEngine } from "../index";
+import {
+  createTiFootprintLibrary,
+  DEFAULT_KICAD_VERSION,
+  TiPartsEngine,
+} from "../index";
 import type { CapturedHttpRequest } from "./fixtures/get-test-server";
 import { getTestServer } from "./fixtures/get-test-server";
 
@@ -13,6 +18,25 @@ const getCapturedRequest = (
     throw new Error(`Expected request ${requestIndex + 1} to be captured`);
   }
   return capturedRequest;
+};
+
+const createTestKicadArchive = async () => {
+  const archive = new JSZip();
+  archive.file(
+    "KiCADv6/footprints.pretty/MSP430_Test.kicad_mod",
+    `(footprint "MSP430_Test"
+  (layer "F.Cu")
+  (attr smd)
+  (fp_text reference "REF**" (at 0 -1.5 0) (layer "F.SilkS")
+    (effects (font (size 1 1) (thickness 0.15))))
+  (fp_text value "MSP430_Test" (at 0 1.5 0) (layer "F.Fab")
+    (effects (font (size 1 1) (thickness 0.15))))
+  (pad "1" smd rect (at -0.65 0 0) (size 0.5 1.1) (layers "F.Cu" "F.Paste" "F.Mask"))
+  (pad "2" smd rect (at 0.65 0 0) (size 0.5 1.1) (layers "F.Cu" "F.Paste" "F.Mask"))
+)`,
+  );
+
+  return Buffer.from(await archive.generateAsync({ type: "uint8array" }));
 };
 
 test("ti parts engine searches and downloads KiCad archives through the bridge API", async () => {
@@ -58,6 +82,38 @@ test("ti parts engine searches and downloads KiCad archives through the bridge A
       "Bearer secret-token",
     );
     expect(archiveRequest.headers.get("accept")).toBe("application/zip");
+  } finally {
+    await server.stop(true);
+  }
+});
+
+test("ti footprint library downloads a KiCad archive and converts the first .kicad_mod in memory", async () => {
+  const archiveBuffer = await createTestKicadArchive();
+  const { url, server, capturedRequests } = await getTestServer({
+    archiveResponseBody: archiveBuffer,
+  });
+
+  try {
+    const loadTiFootprint = createTiFootprintLibrary({
+      partnerToken: "secret-token",
+      baseUrl: url,
+    });
+
+    const result = await loadTiFootprint("MSP430");
+
+    expect(result.footprintCircuitJson.length).toBeGreaterThan(0);
+    expect(
+      result.footprintCircuitJson.some(
+        (element) => element.type === "pcb_smtpad",
+      ),
+    ).toBe(true);
+    expect(capturedRequests).toHaveLength(1);
+
+    const archiveRequest = getCapturedRequest(capturedRequests, 0);
+    expect(archiveRequest.pathname).toBe("/v1/export/kicad");
+    expect(archiveRequest.search).toBe(
+      `?mpn=MSP430&version=${DEFAULT_KICAD_VERSION}`,
+    );
   } finally {
     await server.stop(true);
   }
