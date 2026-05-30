@@ -8,13 +8,11 @@ if (!partnerToken) {
   throw new Error("Missing PARTNER_TOKEN");
 }
 
-const tiPartsEngine = createTiPlatformPartsEngine({
-  partnerToken,
-});
-
 const circuit = new RootCircuit({
   platform: {
-    partsEngine: tiPartsEngine,
+    partsEngine: createTiPlatformPartsEngine({
+      partnerToken,
+    }),
   },
 });
 

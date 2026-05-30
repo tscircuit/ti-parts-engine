@@ -4,7 +4,11 @@ import { mkdtemp, readFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 
-import { extractKicadArchiveFiles, readKicadArchive } from "../index";
+import {
+  extractKicadArchiveFiles,
+  readFirstKicadModFromArchive,
+  readKicadArchive,
+} from "../index";
 
 test("kicad archive helper finds and extracts symbol and footprint files", async () => {
   const archive = new JSZip();
@@ -28,6 +32,9 @@ test("kicad archive helper finds and extracts symbol and footprint files", async
     expect(summary.footprintEntries.map((entry) => entry.path)).toEqual([
       "KiCADv6/footprints.pretty/SOIC-8.kicad_mod",
     ]);
+    expect(await readFirstKicadModFromArchive(archiveBuffer)).toBe(
+      "(footprint)",
+    );
 
     const extraction = await extractKicadArchiveFiles({
       archiveBuffer,

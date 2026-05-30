@@ -1,4 +1,6 @@
 import { TiPartsEngine } from "./TiPartsEngine";
+export { createTiFootprintLibrary } from "./createTiFootprintLibrary";
+export { createTiPlatformConfig } from "./createTiPlatformConfig";
 export { createTiPlatformPartsEngine } from "./createTiPlatformPartsEngine";
 export {
   DEFAULT_BASE_URL,
