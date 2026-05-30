@@ -8,7 +8,5 @@ export const createTiPlatformConfig = (
   options: TiPartsEngineOptions,
 ): Pick<PlatformConfig, "partsEngine" | "footprintLibraryMap"> => ({
   partsEngine: createTiPlatformPartsEngine(options),
-  footprintLibraryMap: {
-    ti: createTiFootprintLibrary(options),
-  },
+  footprintLibraryMap: createTiFootprintLibrary(options),
 });

@@ -97,14 +97,18 @@ test("ti footprint library downloads a KiCad archive and converts the first .kic
     const loadTiFootprint = createTiFootprintLibrary({
       partnerToken: "secret-token",
       baseUrl: url,
-    });
+    }).ti;
+
+    if (!loadTiFootprint) {
+      throw new Error("Expected TI footprint loader to be defined");
+    }
 
     const result = await loadTiFootprint("MSP430");
 
     expect(result.footprintCircuitJson.length).toBeGreaterThan(0);
     expect(
       result.footprintCircuitJson.some(
-        (element) => element.type === "pcb_smtpad",
+        (element: { type?: string }) => element.type === "pcb_smtpad",
       ),
     ).toBe(true);
     expect(capturedRequests).toHaveLength(1);

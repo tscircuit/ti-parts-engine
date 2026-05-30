@@ -6,7 +6,14 @@ import { DEFAULT_KICAD_VERSION } from "../ultra-librarian-bridge-client";
 import { TiPartsEngine } from "./TiPartsEngine";
 import type { TiPartsEngineOptions } from "./types";
 
-export const createTiFootprintLibrary = (options: TiPartsEngineOptions) => {
+type TiFootprintLoader = (mpn: string) => Promise<FootprintLibraryResult>;
+type TiFootprintLibraryMap = {
+  ti: TiFootprintLoader;
+};
+
+const createTiFootprintLoader = (
+  options: TiPartsEngineOptions,
+): TiFootprintLoader => {
   const engine = new TiPartsEngine(options);
 
   return async (mpn: string): Promise<FootprintLibraryResult> => {
@@ -24,3 +31,9 @@ export const createTiFootprintLibrary = (options: TiPartsEngineOptions) => {
     };
   };
 };
+
+export const createTiFootprintLibrary = (
+  options: TiPartsEngineOptions,
+): TiFootprintLibraryMap => ({
+  ti: createTiFootprintLoader(options),
+});
