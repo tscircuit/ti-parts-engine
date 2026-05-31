@@ -36,11 +36,16 @@ const createTestKicadArchive = async () => {
 )`,
   );
 
-  return Buffer.from(await archive.generateAsync({ type: "uint8array" }));
+  return await archive.generateAsync({ type: "uint8array" });
 };
 
+const toByteArray = (bytes: ArrayBuffer | Uint8Array) =>
+  bytes instanceof Uint8Array ? bytes : new Uint8Array(bytes);
+
 test("ti parts engine searches and downloads KiCad archives through the bridge API", async () => {
-  const archiveBuffer = Buffer.from("zip-bytes");
+  const archiveBuffer = new Uint8Array([
+    122, 105, 112, 45, 98, 121, 116, 101, 115,
+  ]);
   const { url, server, capturedRequests } = await getTestServer({
     archiveResponseBody: archiveBuffer,
   });
@@ -58,8 +63,8 @@ test("ti parts engine searches and downloads KiCad archives through the bridge A
 
     expect(searchResponse.results).toEqual([{ mpn: "LM358" }]);
     expect(archiveResponse.contentType).toBe("application/zip");
-    expect(Buffer.compare(archiveResponse.archiveBuffer, archiveBuffer)).toBe(
-      0,
+    expect(Array.from(toByteArray(archiveResponse.archiveBuffer))).toEqual(
+      Array.from(archiveBuffer),
     );
     expect(capturedRequests).toHaveLength(2);
 
@@ -82,6 +87,28 @@ test("ti parts engine searches and downloads KiCad archives through the bridge A
       "Bearer secret-token",
     );
     expect(archiveRequest.headers.get("accept")).toBe("application/zip");
+  } finally {
+    await server.stop(true);
+  }
+});
+
+test("ti parts engine returns ArrayBuffer archive bytes for browser-safe consumers", async () => {
+  const archiveBuffer = await createTestKicadArchive();
+  const { url, server } = await getTestServer({
+    archiveResponseBody: archiveBuffer,
+  });
+
+  try {
+    const tiPartsEngine = new TiPartsEngine({
+      partnerToken: "secret-token",
+      baseUrl: url,
+    });
+
+    const archiveResponse = await tiPartsEngine.downloadKicadArchive({
+      mpn: "MSP430",
+    });
+
+    expect(archiveResponse.archiveBuffer).toBeInstanceOf(ArrayBuffer);
   } finally {
     await server.stop(true);
   }

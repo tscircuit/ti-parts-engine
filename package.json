@@ -9,13 +9,17 @@
     ".": {
       "import": "./dist/index.js",
       "types": "./dist/index.d.ts"
+    },
+    "./footprint-library": {
+      "import": "./dist/footprint-library.js",
+      "types": "./dist/footprint-library.d.ts"
     }
   },
   "files": [
     "dist"
   ],
   "scripts": {
-    "build": "tsup index.ts --format esm --dts --sourcemap",
+    "build": "tsup index.ts footprint-library.ts --format esm --dts --sourcemap",
     "test": "bun test",
     "typecheck": "bunx tsc --noEmit",
     "format": "biome format . --write",

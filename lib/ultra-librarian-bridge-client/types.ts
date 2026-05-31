@@ -45,8 +45,10 @@ export interface KicadExportRequest {
   version?: number;
 }
 
+export type ArchiveBytes = ArrayBuffer | Uint8Array;
+
 export interface DownloadKicadArchiveResponse {
-  archiveBuffer: Buffer;
+  archiveBuffer: ArchiveBytes;
   contentType: string;
 }
 

@@ -8,7 +8,7 @@ export type CapturedHttpRequest = {
 
 type TestServerOptions = {
   searchResponseBody?: string;
-  archiveResponseBody?: Buffer;
+  archiveResponseBody?: ArrayBuffer | Uint8Array;
   archiveContentType?: string;
 };
 
@@ -20,7 +20,8 @@ export const getTestServer = async (options: TestServerOptions = {}) => {
     options.searchResponseBody ??
     JSON.stringify({ results: [{ mpn: "LM358" }] });
   const archiveResponseBody =
-    options.archiveResponseBody ?? Buffer.from("zip-bytes");
+    options.archiveResponseBody ??
+    new Uint8Array([122, 105, 112, 45, 98, 121, 116, 101, 115]);
   const archiveContentType = options.archiveContentType ?? "application/zip";
 
   const server = Bun.serve({
@@ -47,7 +48,7 @@ export const getTestServer = async (options: TestServerOptions = {}) => {
       }
 
       if (requestUrl.pathname === "/v1/export/kicad") {
-        return new Response(new Uint8Array(archiveResponseBody), {
+        return new Response(toArrayBuffer(archiveResponseBody), {
           status: 200,
           headers: { "content-type": archiveContentType },
         });
@@ -62,4 +63,15 @@ export const getTestServer = async (options: TestServerOptions = {}) => {
     server,
     capturedRequests,
   };
+};
+
+const toUint8Array = (archiveBytes: ArrayBuffer | Uint8Array) =>
+  archiveBytes instanceof Uint8Array
+    ? archiveBytes
+    : new Uint8Array(archiveBytes);
+
+const toArrayBuffer = (archiveBytes: ArrayBuffer | Uint8Array) => {
+  if (archiveBytes instanceof ArrayBuffer) return archiveBytes;
+
+  return Uint8Array.from(archiveBytes).buffer;
 };
