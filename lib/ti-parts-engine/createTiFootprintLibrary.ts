@@ -1,7 +1,7 @@
 import type { FootprintLibraryResult } from "@tscircuit/props";
 import { parseKicadModToCircuitJson } from "kicad-component-converter";
 
-import { readFirstKicadModFromArchive } from "../kicad-archive";
+import { readFirstKicadModFromArchive } from "../kicad-archive/readFirstKicadModFromArchive";
 import { DEFAULT_KICAD_VERSION } from "../ultra-librarian-bridge-client";
 import { TiPartsEngine } from "./TiPartsEngine";
 import type { TiPartsEngineOptions } from "./types";

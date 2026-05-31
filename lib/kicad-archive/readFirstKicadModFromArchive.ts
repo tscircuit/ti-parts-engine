@@ -1,5 +1,4 @@
 import JSZip from "jszip";
-import { isAbsolute, normalize } from "node:path/posix";
 
 import { getKicadArchiveEntryKind } from "./getKicadArchiveEntryKind";
 
@@ -37,14 +36,21 @@ function getSafeArchivePath(zipEntry: JSZip.JSZipObject) {
 }
 
 function assertSafeArchivePath(archivePath: string) {
-  const normalizedArchivePath = normalize(archivePath);
-
   if (
     archivePath.includes("\\") ||
     /^[a-zA-Z]:/.test(archivePath) ||
-    isAbsolute(normalizedArchivePath) ||
-    normalizedArchivePath === ".." ||
-    normalizedArchivePath.startsWith("../")
+    archivePath.startsWith("/")
+  ) {
+    throw new Error(`Unsafe KiCad archive path: ${archivePath}`);
+  }
+
+  const normalizedArchiveSegments = archivePath
+    .split("/")
+    .filter((segment) => segment.length > 0 && segment !== ".");
+
+  if (
+    normalizedArchiveSegments.some((segment) => segment === "..") ||
+    archivePath.endsWith("/..")
   ) {
     throw new Error(`Unsafe KiCad archive path: ${archivePath}`);
   }
