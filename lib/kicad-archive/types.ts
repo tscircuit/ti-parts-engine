@@ -1,3 +1,5 @@
+export type KicadArchiveBytes = ArrayBuffer | Uint8Array;
+
 export type KicadArchiveEntryKind = "symbol" | "footprint";
 
 export type KicadArchiveEntry = {
@@ -15,7 +17,7 @@ export type KicadArchiveSummary = {
 };
 
 export type ExtractKicadArchiveFilesRequest = {
-  archiveBuffer: Buffer;
+  archiveBuffer: KicadArchiveBytes;
   outputDirectory: string;
 };
 

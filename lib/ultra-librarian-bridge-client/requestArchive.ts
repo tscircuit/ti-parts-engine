@@ -36,7 +36,7 @@ export async function requestArchive(options: {
   }
 
   return {
-    archiveBuffer: Buffer.from(await response.arrayBuffer()),
+    archiveBuffer: await response.arrayBuffer(),
     contentType,
   };
 }

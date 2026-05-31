@@ -1,13 +1,14 @@
 import JSZip from "jszip";
 
 import { getKicadArchiveEntryKind } from "./getKicadArchiveEntryKind";
+import type { KicadArchiveBytes } from "./types";
 
 type ZipEntryWithUnsafeOriginalName = JSZip.JSZipObject & {
   unsafeOriginalName?: string;
 };
 
 export async function readFirstKicadModFromArchive(
-  archiveBuffer: Buffer,
+  archiveBuffer: KicadArchiveBytes,
 ): Promise<string> {
   const zipFile = await JSZip.loadAsync(archiveBuffer);
 

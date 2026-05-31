@@ -51,7 +51,7 @@ const archiveResponse = await tiPartsEngine.downloadKicadArchive({
 });
 
 await mkdir(outputDirectory, { recursive: true });
-await writeFile(zipPath, archiveResponse.archiveBuffer);
+await writeFile(zipPath, toUint8Array(archiveResponse.archiveBuffer));
 console.log(`Saved zip to: ${zipPath}`);
 
 const archiveSummary = await readKicadArchive(archiveResponse.archiveBuffer);
@@ -142,4 +142,10 @@ async function createOutputDirectory() {
   await mkdir(outputDirectory, { recursive: true });
 
   return outputDirectory;
+}
+
+function toUint8Array(archiveBytes: ArrayBuffer | Uint8Array) {
+  return archiveBytes instanceof Uint8Array
+    ? archiveBytes
+    : new Uint8Array(archiveBytes);
 }

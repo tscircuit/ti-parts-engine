@@ -3,10 +3,14 @@ import { basename } from "node:path/posix";
 
 import { createKicadArchiveSummary } from "./createKicadArchiveSummary";
 import { getKicadArchiveEntryKind } from "./getKicadArchiveEntryKind";
-import type { KicadArchiveEntry, KicadArchiveSummary } from "./types";
+import type {
+  KicadArchiveBytes,
+  KicadArchiveEntry,
+  KicadArchiveSummary,
+} from "./types";
 
 export async function readKicadArchive(
-  archiveBuffer: Buffer,
+  archiveBuffer: KicadArchiveBytes,
 ): Promise<KicadArchiveSummary> {
   const zipFile = await JSZip.loadAsync(archiveBuffer);
   const entries = Object.values(zipFile.files)
