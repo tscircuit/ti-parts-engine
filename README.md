@@ -29,6 +29,20 @@ This PR keeps the initial scope intentionally small:
 bun install
 ```
 
+## GitHub install
+
+This package is not published to npm yet. Install it directly from GitHub:
+
+```bash
+bun add -D github:tscircuit/ti-parts-engine
+```
+
+For the reviewer-requested custom config flow, import `createTiPartsEngine`:
+
+```ts
+import { createTiPartsEngine } from "@tscircuit/ti-parts-engine"
+```
+
 If a future local flow needs partner credentials:
 
 ```bash
@@ -73,17 +87,39 @@ The script uses
 `GET /v1/export/kicad?mpn=LM358&version=6`. It writes the downloaded zip and
 extracted KiCad files under ignored `imports/` output only.
 
-## TSX platform parts engine example
+## Custom Platform Config Example
 
-`createTiPlatformPartsEngine` returns an object compatible with
-`platform.partsEngine` in tscircuit. The example in
-[`examples/root-circuit-platform-config.tsx`](./examples/root-circuit-platform-config.tsx)
-shows a `RootCircuit` configured with the TI parts engine:
+For local CLI or dev usage, the main reviewer-aligned flow is a custom
+`tscircuit.config.ts` that provides a TI parts engine through
+`platformConfig.partsEngine`:
+
+```ts
+import { createTiPartsEngine } from "@tscircuit/ti-parts-engine"
+
+export default {
+  platformConfig: {
+    partsEngine: createTiPartsEngine({
+      // local CLI/dev usage only
+      partnerToken: process.env.PARTNER_TOKEN!,
+    }),
+  },
+}
+```
+
+If you want a runnable `RootCircuit` example, use
+[`examples/root-circuit-platform-config.tsx`](./examples/root-circuit-platform-config.tsx):
 
 ```bash
 PARTNER_TOKEN=... bun examples/root-circuit-platform-config.tsx
 ```
 
 The example reads `PARTNER_TOKEN` from the local environment, creates the TI
-parts engine, passes it to `new RootCircuit({ platform: { partsEngine } })`,
-adds an `LM358` chip, renders the circuit, and prints Circuit JSON.
+parts engine with `createTiPartsEngine(...)`, passes it to
+`new RootCircuit({ platform: { partsEngine } })`, adds an `LM358` chip, renders
+the circuit, and prints Circuit JSON.
+
+## Explicit `ti:` Footprint Strings
+
+If you need explicit footprint strings like `footprint="ti:MSP430"`, use
+`createTiFootprintLibrary(...)` directly or `createTiPlatformConfig(...)`
+programmatically. The custom config flow above only wires `partsEngine`.

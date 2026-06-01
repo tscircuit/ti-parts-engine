@@ -1,8 +1,11 @@
 import type { PartsEngine } from "@tscircuit/props";
 
-import { TiPartsEngine } from "./TiPartsEngine";
+import { createTiPartsEngine } from "./createTiPartsEngine";
 import type { TiPartsEngineOptions } from "./types";
 
+/**
+ * @deprecated Prefer createTiPartsEngine() for new platform config code.
+ */
 export const createTiPlatformPartsEngine = (
   options: TiPartsEngineOptions,
-): PartsEngine => new TiPartsEngine(options);
+): PartsEngine => createTiPartsEngine(options);

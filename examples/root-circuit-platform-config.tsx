@@ -1,6 +1,6 @@
 import React from "react";
 import { RootCircuit } from "tscircuit";
-import { createTiPlatformPartsEngine } from "@tscircuit/ti-parts-engine";
+import { createTiPartsEngine } from "@tscircuit/ti-parts-engine";
 
 const partnerToken = process.env.PARTNER_TOKEN;
 
@@ -10,7 +10,7 @@ if (!partnerToken) {
 
 const circuit = new RootCircuit({
   platform: {
-    partsEngine: createTiPlatformPartsEngine({
+    partsEngine: createTiPartsEngine({
       partnerToken,
     }),
   },

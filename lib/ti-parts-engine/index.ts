@@ -1,4 +1,5 @@
 import { TiPartsEngine } from "./TiPartsEngine";
+export { createTiPartsEngine } from "./createTiPartsEngine";
 export { createTiFootprintLibrary } from "./createTiFootprintLibrary";
 export { createTiPlatformConfig } from "./createTiPlatformConfig";
 export { createTiPlatformPartsEngine } from "./createTiPlatformPartsEngine";
@@ -16,7 +17,3 @@ export type {
   TiPartsEngineOptions,
   TiSupplierPartNumbers,
 } from "./types";
-
-export const createTiPartsEngine = (
-  options: ConstructorParameters<typeof TiPartsEngine>[0],
-) => new TiPartsEngine(options);
