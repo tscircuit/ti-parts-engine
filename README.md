@@ -29,6 +29,21 @@ This PR keeps the initial scope intentionally small:
 bun install
 ```
 
+## GitHub install
+
+This package is not published to npm yet. Install it directly from GitHub:
+
+```bash
+bun add -D github:tscircuit/ti-parts-engine
+```
+
+Then import either the main platform helper or the footprint-library entrypoint:
+
+```ts
+import { createTiPlatformConfig } from "@tscircuit/ti-parts-engine"
+import { createTiFootprintLibrary } from "@tscircuit/ti-parts-engine/footprint-library"
+```
+
 If a future local flow needs partner credentials:
 
 ```bash

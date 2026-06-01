@@ -4,15 +4,19 @@
   "private": true,
   "type": "module",
   "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
+  "types": "./index.ts",
   "exports": {
     ".": {
+      "types": "./index.ts",
+      "bun": "./index.ts",
       "import": "./dist/index.js",
-      "types": "./dist/index.d.ts"
+      "default": "./dist/index.js"
     },
     "./footprint-library": {
+      "types": "./footprint-library.ts",
+      "bun": "./footprint-library.ts",
       "import": "./dist/footprint-library.js",
-      "types": "./dist/footprint-library.d.ts"
+      "default": "./dist/footprint-library.js"
     }
   },
   "files": [
@@ -20,6 +24,7 @@
   ],
   "scripts": {
     "build": "tsup index.ts footprint-library.ts --format esm --dts --sourcemap",
+    "prepare": "bun run build",
     "test": "bun test",
     "typecheck": "bunx tsc --noEmit",
     "format": "biome format . --write",
@@ -28,16 +33,19 @@
   },
   "devDependencies": {
     "@biomejs/biome": "^2.2.4",
-    "@tscircuit/props": "^0.0.538",
     "@types/bun": "^1.2.22",
-    "kicad-component-converter": "^0.1.40",
     "react": "^19.1.1",
     "tscircuit": "^0.0.1790",
     "tsup": "^8.5.0",
     "typescript": "^5.9.3"
   },
   "dependencies": {
-    "jszip": "^3.10.1"
+    "@tscircuit/props": "^0.0.538",
+    "debug": "^4.4.3",
+    "jszip": "^3.10.1",
+    "kicad-component-converter": "^0.1.40",
+    "s-expression": "^3.1.1",
+    "zod": "^3.25.76"
   },
   "peerDependencies": {
     "typescript": "^5"
