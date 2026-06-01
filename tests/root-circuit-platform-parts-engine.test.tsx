@@ -3,14 +3,14 @@ import { expect, test } from "bun:test";
 import JSZip from "jszip";
 import { RootCircuit } from "tscircuit";
 
-import { createTiPlatformConfig, createTiPlatformPartsEngine } from "../index";
+import { createTiPartsEngine, createTiPlatformConfig } from "../index";
 import { getTestServer } from "./fixtures/get-test-server";
 
 test("RootCircuit uses the TI parts engine from platform config", async () => {
   const { url, server, capturedRequests } = await getTestServer();
   const circuit = new RootCircuit({
     platform: {
-      partsEngine: createTiPlatformPartsEngine({
+      partsEngine: createTiPartsEngine({
         partnerToken: "secret-token",
         baseUrl: url,
       }),
