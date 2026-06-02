@@ -2,8 +2,19 @@
   "name": "@tscircuit/ti-parts-engine",
   "version": "0.0.1",
   "type": "module",
-  "main": "./index.ts",
-  "types": "./index.ts",
+  "main": "index.ts",
+  "module": "index.ts",
+  "types": "index.ts",
+  "exports": {
+    ".": {
+      "types": "./index.ts",
+      "import": "./index.ts"
+    }
+  },
+  "files": [
+    "index.ts",
+    "lib"
+  ],
   "scripts": {
     "build": "tsup-node index.ts footprint-library.ts --format esm --dts --sourcemap",
     "test": "bun test",
