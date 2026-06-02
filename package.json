@@ -16,7 +16,7 @@
     "lib"
   ],
   "scripts": {
-    "build": "tsup-node index.ts footprint-library.ts --format esm --dts --sourcemap",
+    "build": "tsup-node index.ts --format esm --dts --sourcemap",
     "test": "bun test",
     "typecheck": "bunx tsc --noEmit",
     "format": "biome format . --write",

@@ -1,12 +1,9 @@
 import { expect, test } from "bun:test";
 import JSZip from "jszip";
 
-import {
-  DEFAULT_KICAD_VERSION,
-  createTiFootprintLibrary,
-} from "../footprint-library";
+import { DEFAULT_KICAD_VERSION, createTiFootprintLibrary } from "../index";
 
-test("footprint-library entrypoint exposes a working TI footprint loader", async () => {
+test("root entrypoint exposes a working TI footprint loader", async () => {
   expect(DEFAULT_KICAD_VERSION).toBe(6);
 
   const archive = new JSZip();
