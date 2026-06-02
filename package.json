@@ -1,25 +1,11 @@
 {
   "name": "@tscircuit/ti-parts-engine",
-  "version": "0.0.0",
-  "private": true,
+  "version": "0.0.1",
   "type": "module",
-  "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
-  "exports": {
-    ".": {
-      "import": "./dist/index.js",
-      "types": "./dist/index.d.ts"
-    },
-    "./footprint-library": {
-      "import": "./dist/footprint-library.js",
-      "types": "./dist/footprint-library.d.ts"
-    }
-  },
-  "files": [
-    "dist"
-  ],
+  "main": "./index.ts",
+  "types": "./index.ts",
   "scripts": {
-    "build": "tsup index.ts footprint-library.ts --format esm --dts --sourcemap",
+    "build": "tsup-node index.ts footprint-library.ts --format esm --dts --sourcemap",
     "test": "bun test",
     "typecheck": "bunx tsc --noEmit",
     "format": "biome format . --write",
