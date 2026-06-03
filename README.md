@@ -120,6 +120,6 @@ the circuit, and prints Circuit JSON.
 
 ## Explicit `ti:` Footprint Strings
 
-If you need explicit footprint strings like `footprint="ti:MSP430"`, use
+If you need explicit footprint strings like `footprint="ti:LM358"`, use
 `createTiFootprintLibrary(...)` directly or `createTiPlatformConfig(...)`
 programmatically. The custom config flow above only wires `partsEngine`.

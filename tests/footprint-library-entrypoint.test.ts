@@ -8,8 +8,8 @@ test("root entrypoint exposes a working TI footprint loader", async () => {
 
   const archive = new JSZip();
   archive.file(
-    "KiCADv6/footprints.pretty/MSP430_Test.kicad_mod",
-    `(footprint "MSP430_Test"
+    "KiCADv6/footprints.pretty/LM358_Test.kicad_mod",
+    `(footprint "LM358_Test"
   (layer "F.Cu")
   (attr smd)
   (pad "1" smd rect (at -0.65 0 0) (size 0.5 1.1) (layers "F.Cu" "F.Paste" "F.Mask"))
@@ -28,7 +28,7 @@ test("root entrypoint exposes a working TI footprint loader", async () => {
 
   expect(typeof footprintLibraryMap.ti).toBe("function");
   expect(
-    (await footprintLibraryMap.ti("MSP430")).footprintCircuitJson.some(
+    (await footprintLibraryMap.ti("LM358")).footprintCircuitJson.some(
       (element: { type?: string }) => element.type === "pcb_smtpad",
     ),
   ).toBe(true);
