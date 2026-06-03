@@ -1,7 +1,7 @@
 import JSZip from "jszip";
-import { mkdir, writeFile } from "node:fs/promises";
-import { dirname, resolve, sep } from "node:path";
-import { basename, isAbsolute, normalize } from "node:path/posix";
+import { mkdir, writeFile } from "fs/promises";
+import { dirname, resolve, sep } from "path";
+import { basename, isAbsolute, normalize } from "path/posix";
 
 import { createKicadArchiveSummary } from "./createKicadArchiveSummary.ts";
 import { getKicadArchiveEntryKind } from "./getKicadArchiveEntryKind.ts";

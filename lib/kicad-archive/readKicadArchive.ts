@@ -1,5 +1,5 @@
 import JSZip from "jszip";
-import { basename } from "node:path/posix";
+import { basename } from "path";
 
 import { createKicadArchiveSummary } from "./createKicadArchiveSummary.ts";
 import { getKicadArchiveEntryKind } from "./getKicadArchiveEntryKind.ts";
