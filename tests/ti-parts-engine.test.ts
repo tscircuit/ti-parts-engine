@@ -23,13 +23,13 @@ const getCapturedRequest = (
 const createTestKicadArchive = async () => {
   const archive = new JSZip();
   archive.file(
-    "KiCADv6/footprints.pretty/MSP430_Test.kicad_mod",
-    `(footprint "MSP430_Test"
+    "KiCADv6/footprints.pretty/LM358_Test.kicad_mod",
+    `(footprint "LM358_Test"
   (layer "F.Cu")
   (attr smd)
   (fp_text reference "REF**" (at 0 -1.5 0) (layer "F.SilkS")
     (effects (font (size 1 1) (thickness 0.15))))
-  (fp_text value "MSP430_Test" (at 0 1.5 0) (layer "F.Fab")
+  (fp_text value "LM358_Test" (at 0 1.5 0) (layer "F.Fab")
     (effects (font (size 1 1) (thickness 0.15))))
   (pad "1" smd rect (at -0.65 0 0) (size 0.5 1.1) (layers "F.Cu" "F.Paste" "F.Mask"))
   (pad "2" smd rect (at 0.65 0 0) (size 0.5 1.1) (layers "F.Cu" "F.Paste" "F.Mask"))
@@ -105,7 +105,7 @@ test("ti parts engine returns ArrayBuffer archive bytes for browser-safe consume
     });
 
     const archiveResponse = await tiPartsEngine.downloadKicadArchive({
-      mpn: "MSP430",
+      mpn: "LM358",
     });
 
     expect(archiveResponse.archiveBuffer).toBeInstanceOf(ArrayBuffer);
@@ -130,7 +130,7 @@ test("ti footprint library downloads a KiCad archive and converts the first .kic
       throw new Error("Expected TI footprint loader to be defined");
     }
 
-    const result = await loadTiFootprint("MSP430");
+    const result = await loadTiFootprint("LM358");
 
     expect(result.footprintCircuitJson.length).toBeGreaterThan(0);
     expect(
@@ -143,7 +143,7 @@ test("ti footprint library downloads a KiCad archive and converts the first .kic
     const archiveRequest = getCapturedRequest(capturedRequests, 0);
     expect(archiveRequest.pathname).toBe("/v1/export/kicad");
     expect(archiveRequest.search).toBe(
-      `?mpn=MSP430&version=${DEFAULT_KICAD_VERSION}`,
+      `?mpn=LM358&version=${DEFAULT_KICAD_VERSION}`,
     );
   } finally {
     await server.stop(true);

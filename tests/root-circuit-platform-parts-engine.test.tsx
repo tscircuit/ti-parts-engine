@@ -58,16 +58,16 @@ test("RootCircuit uses the TI parts engine from platform config", async () => {
   expect(capturedRequests[0]?.search).toBe("?q=LM358&exact_only=true&limit=1");
 });
 
-test('RootCircuit can load footprint="ti:MSP430" through the TI footprint library', async () => {
+test('RootCircuit can load footprint="ti:LM358" through the TI footprint library', async () => {
   const archive = new JSZip();
   archive.file(
-    "KiCADv6/footprints.pretty/MSP430_Test.kicad_mod",
-    `(footprint "MSP430_Test"
+    "KiCADv6/footprints.pretty/LM358_Test.kicad_mod",
+    `(footprint "LM358_Test"
   (layer "F.Cu")
   (attr smd)
   (fp_text reference "REF**" (at 0 -1.5 0) (layer "F.SilkS")
     (effects (font (size 1 1) (thickness 0.15))))
-  (fp_text value "MSP430_Test" (at 0 1.5 0) (layer "F.Fab")
+  (fp_text value "LM358_Test" (at 0 1.5 0) (layer "F.Fab")
     (effects (font (size 1 1) (thickness 0.15))))
   (pad "1" smd rect (at -0.65 0 0) (size 0.5 1.1) (layers "F.Cu" "F.Paste" "F.Mask"))
   (pad "2" smd rect (at 0.65 0 0) (size 0.5 1.1) (layers "F.Cu" "F.Paste" "F.Mask"))
@@ -88,7 +88,7 @@ test('RootCircuit can load footprint="ti:MSP430" through the TI footprint librar
 
   circuit.add(
     <board width="20mm" height="20mm">
-      <chip name="U1" footprint="ti:MSP430" />
+      <chip name="U1" footprint="ti:LM358" />
     </board>,
   );
 
@@ -102,5 +102,5 @@ test('RootCircuit can load footprint="ti:MSP430" through the TI footprint librar
   expect(smtPads.length).toBeGreaterThan(0);
   expect(capturedRequests).toHaveLength(1);
   expect(capturedRequests[0]?.pathname).toBe("/v1/export/kicad");
-  expect(capturedRequests[0]?.search).toBe("?mpn=MSP430&version=6");
+  expect(capturedRequests[0]?.search).toBe("?mpn=LM358&version=6");
 });
