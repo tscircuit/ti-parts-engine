@@ -1,4 +1,4 @@
-import type { KicadArchiveEntry, KicadArchiveSummary } from "./types";
+import type { KicadArchiveEntry, KicadArchiveSummary } from "./types.ts";
 
 export function createKicadArchiveSummary(
   entries: KicadArchiveEntry[],

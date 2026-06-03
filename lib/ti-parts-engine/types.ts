@@ -3,7 +3,7 @@ import type {
   BridgeLogger,
   KicadExportRequest,
   SearchPartsRequest,
-} from "../ultra-librarian-bridge-client";
+} from "../ultra-librarian-bridge-client/index.ts";
 
 export interface TiPartsEngineOptions {
   partnerToken: string;

@@ -2,8 +2,8 @@ import type {
   BridgeFetch,
   BridgeLogger,
   DownloadKicadArchiveResponse,
-} from "./types";
-import { normalizeBaseUrl } from "./normalizeBaseUrl";
+} from "./types.ts";
+import { normalizeBaseUrl } from "./normalizeBaseUrl.ts";
 
 export async function requestArchive(options: {
   fetchImpl: BridgeFetch;

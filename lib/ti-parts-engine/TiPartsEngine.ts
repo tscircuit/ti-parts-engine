@@ -1,15 +1,15 @@
 import type { PartsEngine } from "@tscircuit/props";
 
-import { createUltraLibrarianBridgeClient } from "../ultra-librarian-bridge-client";
+import { createUltraLibrarianBridgeClient } from "../ultra-librarian-bridge-client/index.ts";
 import type {
   DownloadKicadArchiveResponse,
   SearchPartsResponse,
-} from "../ultra-librarian-bridge-client";
+} from "../ultra-librarian-bridge-client/index.ts";
 import type {
   DownloadKicadArchiveParams,
   SearchPartsParams,
   TiPartsEngineOptions,
-} from "./types";
+} from "./types.ts";
 
 type FindPartParams = Parameters<PartsEngine["findPart"]>[0];
 type FindPartResult = Awaited<ReturnType<PartsEngine["findPart"]>>;

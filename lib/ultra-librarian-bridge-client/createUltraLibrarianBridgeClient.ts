@@ -1,13 +1,13 @@
-import { normalizeBaseUrl } from "./normalizeBaseUrl";
-import { buildKicadExportPath, buildSearchPath } from "./paths";
-import { requestArchive } from "./requestArchive";
-import { requestJson } from "./requestJson";
-import { extractSearchResults } from "./search-response";
-import { DEFAULT_BASE_URL } from "./types";
+import { normalizeBaseUrl } from "./normalizeBaseUrl.ts";
+import { buildKicadExportPath, buildSearchPath } from "./paths.ts";
+import { requestArchive } from "./requestArchive.ts";
+import { requestJson } from "./requestJson.ts";
+import { extractSearchResults } from "./search-response.ts";
+import { DEFAULT_BASE_URL } from "./types.ts";
 import type {
   UltraLibrarianBridgeClient,
   UltraLibrarianBridgeClientOptions,
-} from "./types";
+} from "./types.ts";
 
 export function createUltraLibrarianBridgeClient(
   options: UltraLibrarianBridgeClientOptions,

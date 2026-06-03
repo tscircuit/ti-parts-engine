@@ -1,7 +1,7 @@
 import type { PartsEngine } from "@tscircuit/props";
 
-import { createTiPartsEngine } from "./createTiPartsEngine";
-import type { TiPartsEngineOptions } from "./types";
+import { createTiPartsEngine } from "./createTiPartsEngine.ts";
+import type { TiPartsEngineOptions } from "./types.ts";
 
 /**
  * @deprecated Prefer createTiPartsEngine() for new platform config code.

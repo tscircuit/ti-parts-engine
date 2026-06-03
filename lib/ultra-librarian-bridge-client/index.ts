@@ -1,8 +1,8 @@
-export { createUltraLibrarianBridgeClient } from "./createUltraLibrarianBridgeClient";
+export { createUltraLibrarianBridgeClient } from "./createUltraLibrarianBridgeClient.ts";
 export {
   DEFAULT_BASE_URL,
   DEFAULT_KICAD_VERSION,
-} from "./types";
+} from "./types.ts";
 export type {
   BridgeFetch,
   BridgeLogger,
@@ -16,4 +16,4 @@ export type {
   SearchPartsResponse,
   UltraLibrarianBridgeClient,
   UltraLibrarianBridgeClientOptions,
-} from "./types";
+} from "./types.ts";
