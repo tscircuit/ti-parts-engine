@@ -34,10 +34,8 @@
     "react": "^19.1.1",
     "tscircuit": "^0.0.1790",
     "tsup": "^8.5.0",
+    "jszip": "^3.10.1",
     "typescript": "^5.9.3"
-  },
-  "dependencies": {
-    "jszip": "^3.10.1"
   },
   "peerDependencies": {
     "typescript": "^5"
