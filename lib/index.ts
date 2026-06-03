@@ -1,6 +1,6 @@
-export * from "./kicad-archive/index";
-export * from "./ti-parts-engine/index";
-export { createUltraLibrarianBridgeClient } from "./ultra-librarian-bridge-client/index";
+export * from "./kicad-archive/index.ts";
+export * from "./ti-parts-engine/index.ts";
+export { createUltraLibrarianBridgeClient } from "./ultra-librarian-bridge-client/index.ts";
 export type {
   BridgeFetch,
   BridgeLogger,
@@ -14,4 +14,4 @@ export type {
   SearchPartsResponse,
   UltraLibrarianBridgeClient,
   UltraLibrarianBridgeClientOptions,
-} from "./ultra-librarian-bridge-client/index";
+} from "./ultra-librarian-bridge-client/index.ts";
