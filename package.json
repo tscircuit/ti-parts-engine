@@ -28,6 +28,8 @@
     "@tscircuit/fake-ul-kicad-proxy": "github:tscircuit/fake-ul-kicad-proxy",
     "@tscircuit/props": "^0.0.538",
     "@types/bun": "^1.2.22",
+    "bun-match-svg": "0.0.15",
+    "circuit-to-svg": "0.0.350",
     "kicad-component-converter": "^0.1.40",
     "react": "^19.1.1",
     "tscircuit": "^0.0.1790",
