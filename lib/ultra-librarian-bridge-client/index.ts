@@ -1,4 +1,5 @@
 export { createUltraLibrarianBridgeClient } from "./createUltraLibrarianBridgeClient.ts";
+export { createDefaultBridgeFetch } from "./createDefaultBridgeFetch.ts";
 export {
   DEFAULT_BASE_URL,
   DEFAULT_KICAD_VERSION,

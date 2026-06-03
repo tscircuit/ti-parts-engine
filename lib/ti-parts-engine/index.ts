@@ -4,6 +4,7 @@ export { createTiFootprintLibrary } from "./createTiFootprintLibrary.ts";
 export { createTiPlatformConfig } from "./createTiPlatformConfig.ts";
 export { createTiPlatformPartsEngine } from "./createTiPlatformPartsEngine.ts";
 export {
+  createDefaultBridgeFetch,
   DEFAULT_BASE_URL,
   DEFAULT_KICAD_VERSION,
 } from "../ultra-librarian-bridge-client/index.ts";

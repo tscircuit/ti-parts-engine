@@ -1,5 +1,6 @@
 import { normalizeBaseUrl } from "./normalizeBaseUrl.ts";
 import { buildKicadExportPath, buildSearchPath } from "./paths.ts";
+import { createDefaultBridgeFetch } from "./createDefaultBridgeFetch.ts";
 import { requestArchive } from "./requestArchive.ts";
 import { requestJson } from "./requestJson.ts";
 import { extractSearchResults } from "./search-response.ts";
@@ -17,7 +18,7 @@ export function createUltraLibrarianBridgeClient(
     options.partnerToken,
   );
   const baseUrl = normalizeBaseUrl(options.baseUrl ?? DEFAULT_BASE_URL);
-  const fetchImpl = options.fetch ?? fetch;
+  const fetchImpl = options.fetch ?? createDefaultBridgeFetch();
   const logger = options.logger;
 
   return {
