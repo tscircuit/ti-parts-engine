@@ -26,7 +26,6 @@
   "devDependencies": {
     "@biomejs/biome": "^2.2.4",
     "@tscircuit/fake-ul-kicad-proxy": "github:tscircuit/fake-ul-kicad-proxy#d174c33c1b17a52d7a9dc3c2b5506d6fd593bed7",
-    "@tscircuit/props": "^0.0.538",
     "@types/bun": "^1.2.22",
     "bun-match-svg": "0.0.15",
     "circuit-to-svg": "0.0.350",
