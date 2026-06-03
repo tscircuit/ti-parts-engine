@@ -1,4 +1,4 @@
-import type { KicadArchiveEntryKind } from "./types";
+import type { KicadArchiveEntryKind } from "./types.ts";
 
 export function getKicadArchiveEntryKind(
   archivePath: string,

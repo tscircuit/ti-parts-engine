@@ -1,5 +1,5 @@
-import type { BridgeFetch, BridgeLogger, JsonValue } from "./types";
-import { normalizeBaseUrl } from "./normalizeBaseUrl";
+import type { BridgeFetch, BridgeLogger, JsonValue } from "./types.ts";
+import { normalizeBaseUrl } from "./normalizeBaseUrl.ts";
 
 export async function requestJson(options: {
   fetchImpl: BridgeFetch;

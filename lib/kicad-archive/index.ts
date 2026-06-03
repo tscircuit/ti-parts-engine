@@ -1,7 +1,7 @@
-export { extractKicadArchiveFiles } from "./extractKicadArchiveFiles";
-export { getKicadArchiveEntryKind } from "./getKicadArchiveEntryKind";
-export { readKicadArchive } from "./readKicadArchive";
-export { readFirstKicadModFromArchive } from "./readFirstKicadModFromArchive";
+export { extractKicadArchiveFiles } from "./extractKicadArchiveFiles.ts";
+export { getKicadArchiveEntryKind } from "./getKicadArchiveEntryKind.ts";
+export { readKicadArchive } from "./readKicadArchive.ts";
+export { readFirstKicadModFromArchive } from "./readFirstKicadModFromArchive.ts";
 export type {
   ExtractedKicadArchiveFile,
   ExtractKicadArchiveFilesRequest,
@@ -9,4 +9,5 @@ export type {
   KicadArchiveEntry,
   KicadArchiveEntryKind,
   KicadArchiveSummary,
-} from "./types";
+} from "./types.ts";
+export { createKicadArchiveSummary } from "./createKicadArchiveSummary.ts";

@@ -1,10 +1,10 @@
 import type { FootprintLibraryResult } from "@tscircuit/props";
 import { parseKicadModToCircuitJson } from "kicad-component-converter";
 
-import { readFirstKicadModFromArchive } from "../kicad-archive/readFirstKicadModFromArchive";
-import { DEFAULT_KICAD_VERSION } from "../ultra-librarian-bridge-client";
-import { TiPartsEngine } from "./TiPartsEngine";
-import type { TiPartsEngineOptions } from "./types";
+import { readFirstKicadModFromArchive } from "../kicad-archive/readFirstKicadModFromArchive.ts";
+import { DEFAULT_KICAD_VERSION } from "../ultra-librarian-bridge-client/index.ts";
+import { TiPartsEngine } from "./TiPartsEngine.ts";
+import type { TiPartsEngineOptions } from "./types.ts";
 
 type TiFootprintLoader = (mpn: string) => Promise<FootprintLibraryResult>;
 type TiFootprintLibraryMap = {

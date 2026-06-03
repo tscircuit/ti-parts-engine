@@ -1,5 +1,5 @@
-import { DEFAULT_KICAD_VERSION } from "./types";
-import type { KicadExportRequest, SearchPartsRequest } from "./types";
+import { DEFAULT_KICAD_VERSION } from "./types.ts";
+import type { KicadExportRequest, SearchPartsRequest } from "./types.ts";
 
 export function buildSearchPath(request: SearchPartsRequest) {
   const query = requireNonEmptyString("query", request.query);

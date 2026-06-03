@@ -1,13 +1,13 @@
 import JSZip from "jszip";
 import { basename } from "node:path/posix";
 
-import { createKicadArchiveSummary } from "./createKicadArchiveSummary";
-import { getKicadArchiveEntryKind } from "./getKicadArchiveEntryKind";
+import { createKicadArchiveSummary } from "./createKicadArchiveSummary.ts";
+import { getKicadArchiveEntryKind } from "./getKicadArchiveEntryKind.ts";
 import type {
   KicadArchiveBytes,
   KicadArchiveEntry,
   KicadArchiveSummary,
-} from "./types";
+} from "./types.ts";
 
 export async function readKicadArchive(
   archiveBuffer: KicadArchiveBytes,

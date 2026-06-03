@@ -1,4 +1,4 @@
-import type { JsonObject, JsonValue, SearchPartResult } from "./types";
+import type { JsonObject, JsonValue, SearchPartResult } from "./types.ts";
 
 export function extractSearchResults(payload: JsonValue) {
   if (Array.isArray(payload)) {

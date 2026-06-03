@@ -1,7 +1,7 @@
 import JSZip from "jszip";
 
-import { getKicadArchiveEntryKind } from "./getKicadArchiveEntryKind";
-import type { KicadArchiveBytes } from "./types";
+import { getKicadArchiveEntryKind } from "./getKicadArchiveEntryKind.ts";
+import type { KicadArchiveBytes } from "./types.ts";
 
 type ZipEntryWithUnsafeOriginalName = JSZip.JSZipObject & {
   unsafeOriginalName?: string;
