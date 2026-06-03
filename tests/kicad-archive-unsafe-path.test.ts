@@ -1,7 +1,7 @@
 import { expect, test } from "bun:test";
 import JSZip from "jszip";
 
-import { extractKicadArchiveFiles } from "../index";
+import { extractKicadArchiveFiles } from "../lib/kicad-archive/extractKicadArchiveFiles.ts";
 
 test("kicad archive extraction rejects unsafe zip paths", async () => {
   const archive = new JSZip();

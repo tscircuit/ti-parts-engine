@@ -4,11 +4,8 @@ import { mkdtemp, readFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 
-import {
-  extractKicadArchiveFiles,
-  readFirstKicadModFromArchive,
-  readKicadArchive,
-} from "../index";
+import { readFirstKicadModFromArchive, readKicadArchive } from "../index";
+import { extractKicadArchiveFiles } from "../lib/kicad-archive/extractKicadArchiveFiles.ts";
 
 test("kicad archive helper finds and extracts symbol and footprint files", async () => {
   const archive = new JSZip();

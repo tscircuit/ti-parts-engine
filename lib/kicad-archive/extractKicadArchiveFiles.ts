@@ -1,20 +1,21 @@
 import JSZip from "jszip";
 import { mkdir, writeFile } from "node:fs/promises";
 import { dirname, resolve, sep } from "node:path";
-import { basename, isAbsolute, normalize } from "node:path/posix";
+import { normalize } from "node:path/posix";
 
 import { createKicadArchiveSummary } from "./createKicadArchiveSummary.ts";
 import { getKicadArchiveEntryKind } from "./getKicadArchiveEntryKind.ts";
+import {
+  assertSafeArchivePath,
+  getArchiveFileName,
+  getSafeArchivePath,
+} from "./path-utils.ts";
 import type {
   ExtractKicadArchiveFilesRequest,
   ExtractKicadArchiveFilesResponse,
   ExtractedKicadArchiveFile,
   KicadArchiveEntry,
 } from "./types.ts";
-
-type ZipEntryWithUnsafeOriginalName = JSZip.JSZipObject & {
-  unsafeOriginalName?: string;
-};
 
 export async function extractKicadArchiveFiles(
   request: ExtractKicadArchiveFilesRequest,
@@ -34,7 +35,7 @@ export async function extractKicadArchiveFiles(
     const outputPath = getSafeOutputPath(outputDirectory, archivePath);
     const entry = {
       path: archivePath,
-      fileName: basename(archivePath),
+      fileName: getArchiveFileName(archivePath),
       kind,
     };
 
@@ -60,32 +61,6 @@ export async function extractKicadArchiveFiles(
       leftFile.path.localeCompare(rightFile.path),
     ),
   };
-}
-
-function getSafeArchivePath(zipEntry: JSZip.JSZipObject) {
-  const unsafeOriginalName = (zipEntry as ZipEntryWithUnsafeOriginalName)
-    .unsafeOriginalName;
-
-  if (unsafeOriginalName) {
-    assertSafeArchivePath(unsafeOriginalName);
-  }
-
-  assertSafeArchivePath(zipEntry.name);
-  return zipEntry.name;
-}
-
-function assertSafeArchivePath(archivePath: string) {
-  const normalizedArchivePath = normalize(archivePath);
-
-  if (
-    archivePath.includes("\\") ||
-    /^[a-zA-Z]:/.test(archivePath) ||
-    isAbsolute(normalizedArchivePath) ||
-    normalizedArchivePath === ".." ||
-    normalizedArchivePath.startsWith("../")
-  ) {
-    throw new Error(`Unsafe KiCad archive path: ${archivePath}`);
-  }
 }
 
 function getSafeOutputPath(outputDirectory: string, archivePath: string) {
