@@ -1,8 +1,8 @@
 import JSZip from "jszip";
-import { basename } from "node:path/posix";
 
 import { createKicadArchiveSummary } from "./createKicadArchiveSummary.ts";
 import { getKicadArchiveEntryKind } from "./getKicadArchiveEntryKind.ts";
+import { getArchiveFileName } from "./path-utils.ts";
 import type {
   KicadArchiveBytes,
   KicadArchiveEntry,
@@ -22,7 +22,7 @@ export async function readKicadArchive(
       return [
         {
           path: zipEntry.name,
-          fileName: basename(zipEntry.name),
+          fileName: getArchiveFileName(zipEntry.name),
           kind,
         },
       ];

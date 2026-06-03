@@ -5,9 +5,9 @@ import { join, resolve } from "node:path";
 import {
   DEFAULT_KICAD_VERSION,
   TiPartsEngine,
-  extractKicadArchiveFiles,
   readKicadArchive,
 } from "../index";
+import { extractKicadArchiveFiles } from "../lib/kicad-archive/extractKicadArchiveFiles.ts";
 
 const BASE_URL = "https://situations-build-tommy-integrate.trycloudflare.com";
 const PART_MPN = "LM358";
