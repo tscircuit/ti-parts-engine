@@ -36,8 +36,8 @@
     "typescript": "^5.9.3"
   },
   "dependencies": {
-    "kicad-component-converter": "^0.1.40",
-    "jszip": "^3.10.1"
+    "jszip": "^3.10.1",
+    "kicad-component-converter": "^0.1.41"
   },
   "peerDependencies": {
     "typescript": "^5"
