@@ -5,7 +5,7 @@ export async function requestJson(options: {
   fetchImpl: BridgeFetch;
   baseUrl: string;
   path: string;
-  partnerToken: string;
+  partnerToken?: string;
   logger?: BridgeLogger;
 }): Promise<JsonValue> {
   const url = buildRequestUrl(options.baseUrl, options.path);
@@ -24,11 +24,16 @@ export async function requestJson(options: {
   return asJsonValue(await response.json());
 }
 
-function createBridgeHeaders(partnerToken: string, accept: string) {
-  return {
-    Authorization: `Bearer ${partnerToken}`,
+function createBridgeHeaders(partnerToken: string | undefined, accept: string) {
+  const headers: Record<string, string> = {
     Accept: accept,
   };
+
+  if (partnerToken) {
+    headers.Authorization = `Bearer ${partnerToken}`;
+  }
+
+  return headers;
 }
 
 function buildRequestUrl(baseUrl: string, path: string) {

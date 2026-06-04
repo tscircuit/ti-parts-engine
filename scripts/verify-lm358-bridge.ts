@@ -3,26 +3,26 @@ import { mkdir, writeFile } from "node:fs/promises";
 import { join, resolve } from "node:path";
 
 import {
+  DEFAULT_BASE_URL,
   DEFAULT_KICAD_VERSION,
   TiPartsEngine,
   readKicadArchive,
 } from "../index";
 import { extractKicadArchiveFiles } from "../lib/kicad-archive/extractKicadArchiveFiles.ts";
 
-const BASE_URL = "https://situations-build-tommy-integrate.trycloudflare.com";
 const PART_MPN = "LM358";
 const OUTPUT_ROOT = "imports";
 
 await loadLocalEnvFiles([".env", ".env.local"]);
 
-const partnerToken = getRequiredEnv("PARTNER_TOKEN");
+const partnerToken = Bun.env.PARTNER_TOKEN?.trim() || undefined;
 const outputDirectory = await createOutputDirectory();
 const zipPath = join(outputDirectory, `${PART_MPN}_KiCADv6.zip`);
 const extractedDirectory = join(outputDirectory, "extracted");
 
 const tiPartsEngine = new TiPartsEngine({
   partnerToken,
-  baseUrl: BASE_URL,
+  baseUrl: DEFAULT_BASE_URL,
 });
 
 console.log(`Writing imported artifacts to: ${outputDirectory}`);
@@ -124,14 +124,6 @@ function unwrapEnvValue(value: string) {
     return value.slice(1, -1);
   }
 
-  return value;
-}
-
-function getRequiredEnv(name: string) {
-  const value = Bun.env[name]?.trim();
-  if (!value) {
-    throw new Error(`Missing ${name}. Add it to .env.local before running.`);
-  }
   return value;
 }
 

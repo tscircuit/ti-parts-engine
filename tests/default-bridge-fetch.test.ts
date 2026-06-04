@@ -45,7 +45,7 @@ test("default bridge fetch uses the tscircuit dev-server proxy for browser cross
 
   try {
     const response = await createDefaultBridgeFetch()(
-      "https://situations-build-tommy-integrate.trycloudflare.com/v1/export/kicad?mpn=LM358&version=6",
+      "https://ti-api-cors-proxy.seve.workers.dev/v1/export/kicad?mpn=LM358&version=6",
       {
         headers: {
           Accept: "application/zip",
@@ -60,10 +60,10 @@ test("default bridge fetch uses the tscircuit dev-server proxy for browser cross
 
     const headers = new Headers(calls[0]!.init?.headers);
     expect(headers.get("X-Target-Url")).toBe(
-      "https://situations-build-tommy-integrate.trycloudflare.com/v1/export/kicad?mpn=LM358&version=6",
+      "https://ti-api-cors-proxy.seve.workers.dev/v1/export/kicad?mpn=LM358&version=6",
     );
     expect(headers.get("X-Sender-Origin")).toBe(
-      "https://situations-build-tommy-integrate.trycloudflare.com",
+      "https://ti-api-cors-proxy.seve.workers.dev",
     );
     expect(headers.get("Authorization")).toBe("Bearer secret-token");
     expect(headers.get("Accept")).toBe("application/zip");

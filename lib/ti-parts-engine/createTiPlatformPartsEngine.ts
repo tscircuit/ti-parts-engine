@@ -7,5 +7,5 @@ import type { TiPartsEngineOptions } from "./types.ts";
  * @deprecated Prefer createTiPartsEngine() for new platform config code.
  */
 export const createTiPlatformPartsEngine = (
-  options: TiPartsEngineOptions,
+  options: TiPartsEngineOptions = {},
 ): PartsEngine => createTiPartsEngine(options);

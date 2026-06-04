@@ -12,7 +12,7 @@ type TiFootprintLibraryMap = {
 };
 
 const createTiFootprintLoader = (
-  options: TiPartsEngineOptions,
+  options: TiPartsEngineOptions = {},
 ): TiFootprintLoader => {
   const engine = new TiPartsEngine(options);
 
@@ -33,7 +33,7 @@ const createTiFootprintLoader = (
 };
 
 export const createTiFootprintLibrary = (
-  options: TiPartsEngineOptions,
+  options: TiPartsEngineOptions = {},
 ): TiFootprintLibraryMap => ({
   ti: createTiFootprintLoader(options),
 });

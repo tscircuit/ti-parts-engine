@@ -2,17 +2,9 @@ import React from "react";
 import { RootCircuit } from "tscircuit";
 import { createTiPartsEngine } from "@tscircuit/ti-parts-engine";
 
-const partnerToken = process.env.PARTNER_TOKEN;
-
-if (!partnerToken) {
-  throw new Error("Missing PARTNER_TOKEN");
-}
-
 const circuit = new RootCircuit({
   platform: {
-    partsEngine: createTiPartsEngine({
-      partnerToken,
-    }),
+    partsEngine: createTiPartsEngine(),
   },
 });
 

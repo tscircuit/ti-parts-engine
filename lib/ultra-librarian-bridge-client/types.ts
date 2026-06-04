@@ -1,5 +1,4 @@
-export const DEFAULT_BASE_URL =
-  "https://situations-build-tommy-integrate.trycloudflare.com";
+export const DEFAULT_BASE_URL = "https://ti-api-cors-proxy.seve.workers.dev/";
 export const DEFAULT_KICAD_VERSION = 6;
 
 export type JsonPrimitive = string | number | boolean | null;
@@ -15,7 +14,7 @@ export interface BridgeLogger {
 }
 
 export interface UltraLibrarianBridgeClientOptions {
-  partnerToken: string;
+  partnerToken?: string;
   baseUrl?: string;
   fetch?: BridgeFetch;
   logger?: BridgeLogger;
