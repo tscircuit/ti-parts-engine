@@ -82,16 +82,20 @@ otherwise it calls the default proxy without auth.
 
 ## Custom Platform Config Example
 
-For local CLI or dev usage, the main reviewer-aligned flow is a custom
-`tscircuit.config.ts` that provides a TI parts engine through
-`platformConfig.partsEngine`:
+For local CLI or dev usage, use a custom `tscircuit.config.ts` that provides
+TI-backed part lookup through `platformConfig.partsEngine` and explicit
+`ti:` footprint strings through `platformConfig.footprintLibraryMap`:
 
 ```ts
-import { createTiPartsEngine } from "@tscircuit/ti-parts-engine"
+import {
+  createTiFootprintLibrary,
+  createTiPartsEngine,
+} from "@tscircuit/ti-parts-engine"
 
 export default {
   platformConfig: {
     partsEngine: createTiPartsEngine(),
+    footprintLibraryMap: createTiFootprintLibrary(),
   },
 }
 ```
@@ -109,6 +113,12 @@ renders the circuit, and prints Circuit JSON.
 
 ## Explicit `ti:` Footprint Strings
 
-If you need explicit footprint strings like `footprint="ti:LM358"`, use
-`createTiFootprintLibrary(...)` directly or `createTiPlatformConfig(...)`
-programmatically. The custom config flow above only wires `partsEngine`.
+With `footprintLibraryMap` configured, circuits can reference TI footprints by
+manufacturer part number:
+
+```tsx
+<chip name="U1" footprint="ti:LM358" />
+```
+
+Programmatic `RootCircuit` callers can also use `createTiPlatformConfig(...)`
+to wire both `partsEngine` and `footprintLibraryMap` together.

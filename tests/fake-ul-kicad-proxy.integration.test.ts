@@ -2,16 +2,16 @@ import { expect, test } from "bun:test";
 import JSZip from "jszip";
 
 import { DEFAULT_KICAD_VERSION, TiPartsEngine } from "../index";
-import { getFakeUlKicadProxyTestServer } from "./fixtures/get-fake-ul-kicad-proxy-server";
+import { getTestServer } from "./fixtures/get-test-server";
 
 const toByteArray = (bytes: ArrayBuffer | Uint8Array) =>
   bytes instanceof Uint8Array ? bytes : new Uint8Array(bytes);
 
 test("ti parts engine integrates with the fake UL KiCad proxy GitHub dependency", async () => {
-  const { url } = await getFakeUlKicadProxyTestServer();
+  const { fakeUlProxyUrl } = await getTestServer();
   const tiPartsEngine = new TiPartsEngine({
     partnerToken: "secret-token",
-    baseUrl: url,
+    baseUrl: fakeUlProxyUrl,
   });
 
   const searchResponse = await tiPartsEngine.searchParts({
