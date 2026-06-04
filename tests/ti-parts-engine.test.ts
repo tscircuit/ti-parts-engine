@@ -23,6 +23,24 @@ const getCapturedRequest = (
 const createTestKicadArchive = async () => {
   const archive = new JSZip();
   archive.file(
+    "KiCADv6/LM358_Test.kicad_sym",
+    `(kicad_symbol_lib
+  (version 20211014)
+  (generator ti-parts-engine-test)
+  (symbol "LM358_Test"
+    (property "Reference" "U" (at 0 0 0)
+      (effects (font (size 1.27 1.27))))
+    (property "Value" "LM358" (at 0 -2.54 0)
+      (effects (font (size 1.27 1.27))))
+    (symbol "LM358_Test_0_1"
+      (pin input line (at -5.08 0 0) (length 2.54)
+        (name "IN+" (effects (font (size 1.27 1.27))))
+        (number "1" (effects (font (size 1.27 1.27)))))
+    )
+  )
+)`,
+  );
+  archive.file(
     "KiCADv6/footprints.pretty/LM358_Test.kicad_mod",
     `(footprint "LM358_Test"
   (layer "F.Cu")
@@ -140,7 +158,7 @@ test("ti parts engine returns ArrayBuffer archive bytes for browser-safe consume
   }
 });
 
-test("ti footprint library downloads a KiCad archive and converts the first .kicad_mod in memory", async () => {
+test("ti footprint library downloads a KiCad archive and converts footprint and symbol files in memory", async () => {
   const archiveBuffer = await createTestKicadArchive();
   const { fakeUlProxyUrl, server, capturedRequests } = await getTestServer({
     archiveResponseBody: archiveBuffer,
@@ -162,6 +180,16 @@ test("ti footprint library downloads a KiCad archive and converts the first .kic
     expect(
       result.footprintCircuitJson.some(
         (element: { type?: string }) => element.type === "pcb_smtpad",
+      ),
+    ).toBe(true);
+    expect(
+      result.footprintCircuitJson.some(
+        (element: { type?: string }) => element.type === "schematic_component",
+      ),
+    ).toBe(true);
+    expect(
+      result.footprintCircuitJson.some(
+        (element: { type?: string }) => element.type === "schematic_port",
       ),
     ).toBe(true);
     expect(capturedRequests).toHaveLength(1);

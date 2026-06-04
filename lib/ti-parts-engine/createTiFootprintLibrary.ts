@@ -1,7 +1,7 @@
 import type { FootprintLibraryResult } from "@tscircuit/props";
 import { KicadToCircuitJsonConverter } from "kicad-to-circuit-json";
 
-import { readFirstKicadModFromArchive } from "../kicad-archive/readFirstKicadModFromArchive.ts";
+import { readFirstKicadLibraryFilesFromArchive } from "../kicad-archive/readFirstKicadLibraryFilesFromArchive.ts";
 import { DEFAULT_KICAD_VERSION } from "../ultra-librarian-bridge-client/index.ts";
 import { TiPartsEngine } from "./TiPartsEngine.ts";
 import type { TiPartsEngineOptions } from "./types.ts";
@@ -21,10 +21,12 @@ const createTiFootprintLoader = (
       mpn,
       version: DEFAULT_KICAD_VERSION,
     });
-    const kicadModText = await readFirstKicadModFromArchive(
-      archive.archiveBuffer,
-    );
-    const footprintCircuitJson = convertKicadModToCircuitJson(kicadModText);
+    const { kicadModText, kicadSymbolLibText } =
+      await readFirstKicadLibraryFilesFromArchive(archive.archiveBuffer);
+    const footprintCircuitJson = convertKicadFilesToCircuitJson({
+      kicadModText,
+      kicadSymbolLibText,
+    });
 
     return {
       footprintCircuitJson,
@@ -38,8 +40,17 @@ export const createTiFootprintLibrary = (
   ti: createTiFootprintLoader(options),
 });
 
-function convertKicadModToCircuitJson(kicadModText: string) {
+function convertKicadFilesToCircuitJson({
+  kicadModText,
+  kicadSymbolLibText,
+}: {
+  kicadModText: string;
+  kicadSymbolLibText?: string;
+}) {
   const converter = new KicadToCircuitJsonConverter();
+  if (kicadSymbolLibText) {
+    converter.addFile("symbol.kicad_sym", kicadSymbolLibText);
+  }
   converter.addFile(
     "footprint.kicad_pcb",
     createKicadPcbForFootprint(kicadModText),

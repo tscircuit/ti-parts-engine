@@ -8,6 +8,24 @@ test("root entrypoint exposes a working TI footprint loader", async () => {
 
   const archive = new JSZip();
   archive.file(
+    "KiCADv6/LM358_Test.kicad_sym",
+    `(kicad_symbol_lib
+  (version 20211014)
+  (generator ti-parts-engine-test)
+  (symbol "LM358_Test"
+    (property "Reference" "U" (at 0 0 0)
+      (effects (font (size 1.27 1.27))))
+    (property "Value" "LM358" (at 0 -2.54 0)
+      (effects (font (size 1.27 1.27))))
+    (symbol "LM358_Test_0_1"
+      (pin input line (at -5.08 0 0) (length 2.54)
+        (name "IN+" (effects (font (size 1.27 1.27))))
+        (number "1" (effects (font (size 1.27 1.27)))))
+    )
+  )
+)`,
+  );
+  archive.file(
     "KiCADv6/footprints.pretty/LM358_Test.kicad_mod",
     `(footprint "LM358_Test"
   (layer "F.Cu")
@@ -27,9 +45,16 @@ test("root entrypoint exposes a working TI footprint loader", async () => {
   });
 
   expect(typeof footprintLibraryMap.ti).toBe("function");
+  const result = await footprintLibraryMap.ti("LM358");
+
   expect(
-    (await footprintLibraryMap.ti("LM358")).footprintCircuitJson.some(
+    result.footprintCircuitJson.some(
       (element: { type?: string }) => element.type === "pcb_smtpad",
+    ),
+  ).toBe(true);
+  expect(
+    result.footprintCircuitJson.some(
+      (element: { type?: string }) => element.type === "schematic_port",
     ),
   ).toBe(true);
 });
