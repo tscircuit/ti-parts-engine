@@ -4,5 +4,5 @@ import { TiPartsEngine } from "./TiPartsEngine.ts";
 import type { TiPartsEngineOptions } from "./types.ts";
 
 export const createTiPartsEngine = (
-  options: TiPartsEngineOptions,
+  options: TiPartsEngineOptions = {},
 ): PartsEngine => new TiPartsEngine(options);

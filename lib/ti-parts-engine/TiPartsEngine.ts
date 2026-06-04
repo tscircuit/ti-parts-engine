@@ -17,7 +17,7 @@ type FindPartResult = Awaited<ReturnType<PartsEngine["findPart"]>>;
 export class TiPartsEngine implements PartsEngine {
   private readonly options: TiPartsEngineOptions;
 
-  constructor(options: TiPartsEngineOptions) {
+  constructor(options: TiPartsEngineOptions = {}) {
     this.options = options;
     this.searchParts = this.searchParts.bind(this);
     this.downloadKicadArchive = this.downloadKicadArchive.bind(this);

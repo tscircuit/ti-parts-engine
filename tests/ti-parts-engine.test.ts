@@ -92,6 +92,31 @@ test("ti parts engine searches and downloads KiCad archives through the bridge A
   }
 });
 
+test("ti parts engine can search and download KiCad archives without a partner token", async () => {
+  const { url, server, capturedRequests } = await getTestServer();
+
+  try {
+    const tiPartsEngine = new TiPartsEngine({
+      baseUrl: url,
+    });
+
+    await tiPartsEngine.searchParts({ query: "LM358" });
+    await tiPartsEngine.downloadKicadArchive({
+      mpn: "LM358",
+    });
+
+    expect(capturedRequests).toHaveLength(2);
+    expect(
+      getCapturedRequest(capturedRequests, 0).headers.get("authorization"),
+    ).toBeNull();
+    expect(
+      getCapturedRequest(capturedRequests, 1).headers.get("authorization"),
+    ).toBeNull();
+  } finally {
+    await server.stop(true);
+  }
+});
+
 test("ti parts engine returns ArrayBuffer archive bytes for browser-safe consumers", async () => {
   const archiveBuffer = await createTestKicadArchive();
   const { url, server } = await getTestServer({

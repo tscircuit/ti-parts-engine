@@ -6,7 +6,7 @@ import type {
 } from "../ultra-librarian-bridge-client/index.ts";
 
 export interface TiPartsEngineOptions {
-  partnerToken: string;
+  partnerToken?: string;
   baseUrl?: string;
   fetch?: BridgeFetch;
   logger?: BridgeLogger;

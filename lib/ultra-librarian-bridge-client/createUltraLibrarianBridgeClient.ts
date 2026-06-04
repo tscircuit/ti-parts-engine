@@ -11,12 +11,9 @@ import type {
 } from "./types.ts";
 
 export function createUltraLibrarianBridgeClient(
-  options: UltraLibrarianBridgeClientOptions,
+  options: UltraLibrarianBridgeClientOptions = {},
 ): UltraLibrarianBridgeClient {
-  const partnerToken = requireNonEmptyString(
-    "partnerToken",
-    options.partnerToken,
-  );
+  const partnerToken = normalizeOptionalString(options.partnerToken);
   const baseUrl = normalizeBaseUrl(options.baseUrl ?? DEFAULT_BASE_URL);
   const fetchImpl = options.fetch ?? createDefaultBridgeFetch();
   const logger = options.logger;
@@ -51,12 +48,7 @@ export function createUltraLibrarianBridgeClient(
   };
 }
 
-function requireNonEmptyString(name: string, value: string) {
-  const trimmedValue = value.trim();
-
-  if (trimmedValue.length === 0) {
-    throw new Error(`${name} is required.`);
-  }
-
-  return trimmedValue;
+function normalizeOptionalString(value: string | undefined) {
+  const trimmedValue = value?.trim();
+  return trimmedValue ? trimmedValue : undefined;
 }
