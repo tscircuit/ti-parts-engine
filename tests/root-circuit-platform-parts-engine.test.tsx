@@ -7,12 +7,12 @@ import { createTiPartsEngine, createTiPlatformConfig } from "../index";
 import { getTestServer } from "./fixtures/get-test-server";
 
 test("RootCircuit uses the TI parts engine from platform config", async () => {
-  const { url, server, capturedRequests } = await getTestServer();
+  const { fakeUlProxyUrl, server, capturedRequests } = await getTestServer();
   const circuit = new RootCircuit({
     platform: {
       partsEngine: createTiPartsEngine({
         partnerToken: "secret-token",
-        baseUrl: url,
+        baseUrl: fakeUlProxyUrl,
       }),
     },
   });
@@ -76,13 +76,13 @@ test('RootCircuit can load footprint="ti:LM358" through the TI footprint library
   const archiveBuffer = Buffer.from(
     await archive.generateAsync({ type: "uint8array" }),
   );
-  const { url, server, capturedRequests } = await getTestServer({
+  const { fakeUlProxyUrl, server, capturedRequests } = await getTestServer({
     archiveResponseBody: archiveBuffer,
   });
   const circuit = new RootCircuit({
     platform: createTiPlatformConfig({
       partnerToken: "secret-token",
-      baseUrl: url,
+      baseUrl: fakeUlProxyUrl,
     }),
   });
 

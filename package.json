@@ -36,7 +36,7 @@
   },
   "dependencies": {
     "jszip": "^3.10.1",
-    "kicad-component-converter": "^0.1.41"
+    "kicad-to-circuit-json": "^0.0.78"
   },
   "peerDependencies": {
     "typescript": "^5"

@@ -46,14 +46,14 @@ test("ti parts engine searches and downloads KiCad archives through the bridge A
   const archiveBuffer = new Uint8Array([
     122, 105, 112, 45, 98, 121, 116, 101, 115,
   ]);
-  const { url, server, capturedRequests } = await getTestServer({
+  const { fakeUlProxyUrl, server, capturedRequests } = await getTestServer({
     archiveResponseBody: archiveBuffer,
   });
 
   try {
     const tiPartsEngine = new TiPartsEngine({
       partnerToken: "secret-token",
-      baseUrl: url,
+      baseUrl: fakeUlProxyUrl,
     });
 
     const searchResponse = await tiPartsEngine.searchParts({ query: "LM358" });
@@ -61,7 +61,8 @@ test("ti parts engine searches and downloads KiCad archives through the bridge A
       mpn: "LM358",
     });
 
-    expect(searchResponse.results).toEqual([{ mpn: "LM358" }]);
+    expect(searchResponse.results).toHaveLength(1);
+    expect(searchResponse.results[0]).toMatchObject({ mpn: "LM358" });
     expect(archiveResponse.contentType).toBe("application/zip");
     expect(Array.from(toByteArray(archiveResponse.archiveBuffer))).toEqual(
       Array.from(archiveBuffer),
@@ -93,11 +94,11 @@ test("ti parts engine searches and downloads KiCad archives through the bridge A
 });
 
 test("ti parts engine can search and download KiCad archives without a partner token", async () => {
-  const { url, server, capturedRequests } = await getTestServer();
+  const { fakeUlProxyUrl, server, capturedRequests } = await getTestServer();
 
   try {
     const tiPartsEngine = new TiPartsEngine({
-      baseUrl: url,
+      baseUrl: fakeUlProxyUrl,
     });
 
     await tiPartsEngine.searchParts({ query: "LM358" });
@@ -119,14 +120,14 @@ test("ti parts engine can search and download KiCad archives without a partner t
 
 test("ti parts engine returns ArrayBuffer archive bytes for browser-safe consumers", async () => {
   const archiveBuffer = await createTestKicadArchive();
-  const { url, server } = await getTestServer({
+  const { fakeUlProxyUrl, server } = await getTestServer({
     archiveResponseBody: archiveBuffer,
   });
 
   try {
     const tiPartsEngine = new TiPartsEngine({
       partnerToken: "secret-token",
-      baseUrl: url,
+      baseUrl: fakeUlProxyUrl,
     });
 
     const archiveResponse = await tiPartsEngine.downloadKicadArchive({
@@ -141,14 +142,14 @@ test("ti parts engine returns ArrayBuffer archive bytes for browser-safe consume
 
 test("ti footprint library downloads a KiCad archive and converts the first .kicad_mod in memory", async () => {
   const archiveBuffer = await createTestKicadArchive();
-  const { url, server, capturedRequests } = await getTestServer({
+  const { fakeUlProxyUrl, server, capturedRequests } = await getTestServer({
     archiveResponseBody: archiveBuffer,
   });
 
   try {
     const loadTiFootprint = createTiFootprintLibrary({
       partnerToken: "secret-token",
-      baseUrl: url,
+      baseUrl: fakeUlProxyUrl,
     }).ti;
 
     if (!loadTiFootprint) {

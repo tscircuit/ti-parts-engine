@@ -41,7 +41,7 @@ test('circuit-to-svg snapshot for footprint="ti:LM358"', async () => {
     LM358_TEST_FOOTPRINT,
   );
   const archiveBuffer = await archive.generateAsync({ type: "uint8array" });
-  const { url, server } = await getTestServer({
+  const { fakeUlProxyUrl, server } = await getTestServer({
     archiveResponseBody: archiveBuffer,
   });
 
@@ -49,7 +49,7 @@ test('circuit-to-svg snapshot for footprint="ti:LM358"', async () => {
     const circuit = new RootCircuit({
       platform: createTiPlatformConfig({
         partnerToken: "secret-token",
-        baseUrl: url,
+        baseUrl: fakeUlProxyUrl,
       }),
     });
 
