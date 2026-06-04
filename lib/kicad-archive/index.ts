@@ -1,9 +1,9 @@
 export { getKicadArchiveEntryKind } from "./getKicadArchiveEntryKind.ts";
 export { readKicadArchive } from "./readKicadArchive.ts";
-// export {
-//   readFirstKicadLibraryFilesFromArchive,
-//   type KicadLibraryFiles,
-// } from "./readFirstKicadLibraryFilesFromArchive.ts";
+export {
+  readFirstKicadLibraryFilesFromArchive,
+  type KicadLibraryFiles,
+} from "./readFirstKicadLibraryFilesFromArchive.ts";
 export { readFirstKicadModFromArchive } from "./readFirstKicadModFromArchive.ts";
 export type {
   KicadArchiveEntry,
