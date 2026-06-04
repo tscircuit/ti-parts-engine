@@ -1,6 +1,5 @@
 import { afterEach } from "bun:test";
 import { ULKiCadProxyServer } from "@tscircuit/fake-ul-kicad-proxy";
-import JSZip from "jszip";
 
 export type CapturedHttpRequest = {
   pathname: string;
@@ -65,10 +64,9 @@ export const getTestServer = async (options: TestServerOptions = {}) => {
         });
       }
 
-      const fakeResponse = await handleFakeProxyRequest(
+      return handleFakeProxyRequest(
         createFakeProxyRequest(request, requestBody),
       );
-      return await normalizeFakeKicadArchiveResponse(fakeResponse);
     }
 
     return handleFakeProxyRequest(createFakeProxyRequest(request, requestBody));
@@ -109,65 +107,3 @@ const createFakeProxyRequest = (request: Request, requestBody: string) => {
     body: METHODS_WITHOUT_BODY.has(request.method) ? undefined : requestBody,
   });
 };
-
-const normalizeFakeKicadArchiveResponse = async (response: Response) => {
-  const responseBytes = await response.arrayBuffer();
-  const headers = new Headers(response.headers);
-
-  if (
-    !response.ok ||
-    !headers.get("content-type")?.includes("application/zip")
-  ) {
-    return new Response(responseBytes, {
-      status: response.status,
-      statusText: response.statusText,
-      headers,
-    });
-  }
-
-  const zip = await JSZip.loadAsync(responseBytes);
-
-  await Promise.all(
-    Object.entries(zip.files).map(async ([archivePath, zipEntry]) => {
-      if (zipEntry.dir || !archivePath.endsWith(".kicad_mod")) return;
-
-      zip.file(
-        archivePath,
-        normalizeFakeKicadModForConverter(await zipEntry.async("text")),
-      );
-    }),
-  );
-
-  return new Response(await zip.generateAsync({ type: "arraybuffer" }), {
-    status: response.status,
-    statusText: response.statusText,
-    headers,
-  });
-};
-
-const normalizeFakeKicadModForConverter = (kicadModText: string) =>
-  addDefaultFpTextEffects(addDefaultFootprintLayer(kicadModText));
-
-const addDefaultFootprintLayer = (kicadModText: string) =>
-  kicadModText.replace(
-    /^(\(footprint[^\n]*\n)(?!\s*\(layer\s)/,
-    '$1  (layer "F.Cu")\n',
-  );
-
-const addDefaultFpTextEffects = (kicadModText: string) =>
-  kicadModText
-    .split("\n")
-    .map((line) => {
-      if (
-        !line.trimStart().startsWith("(fp_text ") ||
-        line.includes("(effects")
-      ) {
-        return line;
-      }
-
-      return line.replace(
-        /\)$/,
-        " (effects (font (size 1 1) (thickness 0.15))))",
-      );
-    })
-    .join("\n");
