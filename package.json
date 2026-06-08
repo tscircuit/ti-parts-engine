@@ -30,13 +30,14 @@
     "bun-match-svg": "0.0.15",
     "circuit-to-svg": "0.0.350",
     "react": "^19.1.1",
-    "tscircuit": "^0.0.1813",
+    "tscircuit": "^0.0.1832",
     "tsup": "^8.5.0",
     "typescript": "^5.9.3"
   },
   "dependencies": {
     "jszip": "^3.10.1",
-    "kicad-to-circuit-json": "^0.0.81"
+    "kicad-to-circuit-json": "^0.0.92",
+    "kicadts": "^0.0.45"
   },
   "peerDependencies": {
     "typescript": "^5"
