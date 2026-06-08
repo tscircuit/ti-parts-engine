@@ -30,7 +30,7 @@
     "bun-match-svg": "0.0.15",
     "circuit-to-svg": "0.0.350",
     "react": "^19.1.1",
-    "tscircuit": "^0.0.1832",
+    "tscircuit": "^0.0.1837",
     "tsup": "^8.5.0",
     "typescript": "^5.9.3"
   },
