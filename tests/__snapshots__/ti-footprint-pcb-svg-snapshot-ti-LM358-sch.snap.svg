@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="600" style="background-color: rgb(245, 241, 237)" data-real-to-screen-transform="matrix(34.9434837683,0,0,-34.9434837683,1158.0678194781,300)" data-software-used-string="@tscircuit/core@0.0.1300"><style>
+              .boundary { fill: rgb(245, 241, 237); }
+              .schematic-boundary { fill: none; stroke: #fff; }
+              .component { fill: none; stroke: rgb(132, 0, 0); }
+              .chip { fill: rgb(255, 255, 194); stroke: rgb(132, 0, 0); }
+              .component-pin { fill: none; stroke: rgb(132, 0, 0); }
+              /* Basic per-trace hover fallback */
+              .trace:hover {
+                filter: invert(1);
+              }
+              .trace:hover .trace-crossing-outline {
+                opacity: 0;
+              }
+              .trace:hover .trace-junction {
+                filter: invert(1);
+              }
+              /* Net-hover highlighting: when a trace or its overlays are hovered,
+                 invert color for all traces (base + overlays) sharing the same
+                 subcircuit connectivity key. Also hide crossing outline during hover. */
+              
+              .text { font-family: sans-serif; fill: rgb(0, 150, 0); }
+              .pin-number { fill: rgb(169, 0, 0); }
+              .port-label { fill: rgb(0, 100, 100); }
+              .component-name { fill: rgb(0, 100, 100); }
+            </style><rect class="boundary" x="0" y="0" width="1200" height="600"/><g data-circuit-json-type="schematic_component" data-schematic-component-id="schematic_component_0"/><g class="schematic-port-hover" data-schematic-port-id="source_port_0"><circle cx="1137.10172921712" cy="289.51695486951" r="1.397739350732" fill="red" opacity="0"/></g><g class="schematic-port-hover" data-schematic-port-id="source_port_1"><circle cx="1137.10172921712" cy="296.50565162317" r="1.397739350732" fill="red" opacity="0"/></g><g class="schematic-port-hover" data-schematic-port-id="source_port_2"><circle cx="1137.10172921712" cy="303.49434837683" r="1.397739350732" fill="red" opacity="0"/></g><g class="schematic-port-hover" data-schematic-port-id="source_port_3"><circle cx="1137.10172921712" cy="310.48304513049" r="1.397739350732" fill="red" opacity="0"/></g><g class="schematic-port-hover" data-schematic-port-id="source_port_4"><circle cx="1179.0339097390802" cy="310.48304513049" r="1.397739350732" fill="red" opacity="0"/></g><g class="schematic-port-hover" data-schematic-port-id="source_port_5"><circle cx="1179.0339097390802" cy="303.49434837683" r="1.397739350732" fill="red" opacity="0"/></g><g class="schematic-port-hover" data-schematic-port-id="source_port_6"><circle cx="1179.0339097390802" cy="296.50565162317" r="1.397739350732" fill="red" opacity="0"/></g><g class="schematic-port-hover" data-schematic-port-id="source_port_7"><circle cx="1179.0339097390802" cy="289.51695486951" r="1.397739350732" fill="red" opacity="0"/></g><text x="284.48072527060015" y="193.1964066449833" fill="rgb(132, 0, 0)" text-anchor="middle" dominant-baseline="middle" font-family="sans-serif" font-size="26.70089833875417px" transform="rotate(0, 284.48072527060015, 193.1964066449833)">U</text><text x="284.48072527060015" y="406.8035933550167" fill="rgb(132, 0, 0)" text-anchor="middle" dominant-baseline="middle" font-family="sans-serif" font-size="26.70089833875417px" transform="rotate(0, 284.48072527060015, 406.8035933550167)">FAKE_GENERATED_LM358</text></svg>
