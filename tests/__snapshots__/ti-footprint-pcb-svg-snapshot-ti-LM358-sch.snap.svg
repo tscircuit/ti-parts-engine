@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="600" style="background-color: rgb(245, 241, 237)" data-real-to-screen-transform="matrix(47.6072196701,0,0,-47.6072196701,1142.8713363958,291.4099328729)" data-software-used-string="@tscircuit/core@0.0.1300"><style>
+              .boundary { fill: rgb(245, 241, 237); }
+              .schematic-boundary { fill: none; stroke: #fff; }
+              .component { fill: none; stroke: rgb(132, 0, 0); }
+              .chip { fill: rgb(255, 255, 194); stroke: rgb(132, 0, 0); }
+              .component-pin { fill: none; stroke: rgb(132, 0, 0); }
+              /* Basic per-trace hover fallback */
+              .trace:hover {
+                filter: invert(1);
+              }
+              .trace:hover .trace-crossing-outline {
+                opacity: 0;
+              }
+              .trace:hover .trace-junction {
+                filter: invert(1);
+              }
+              /* Net-hover highlighting: when a trace or its overlays are hovered,
+                 invert color for all traces (base + overlays) sharing the same
+                 subcircuit connectivity key. Also hide crossing outline during hover. */
+              
+              .text { font-family: sans-serif; fill: rgb(0, 150, 0); }
+              .pin-number { fill: rgb(169, 0, 0); }
+              .port-label { fill: rgb(0, 100, 100); }
+              .component-name { fill: rgb(0, 100, 100); }
+            </style><rect class="boundary" x="0" y="0" width="1200" height="600"/><g data-circuit-json-type="schematic_component" data-schematic-component-id="schematic_component_0"><line x1="24.27968203255091" y1="243.68404128006608" x2="24.27968203255091" y2="410.72466185498484" stroke="rgb(132, 0, 0)" stroke-width="1.1931472898208486" data-schematic-line-id="schematic_line_0" data-schematic-component-id="schematic_component_0"/><line x1="24.27968203255091" y1="410.72466185498484" x2="262.90913999672046" y2="410.72466185498484" stroke="rgb(132, 0, 0)" stroke-width="1.1931472898208486" data-schematic-line-id="schematic_line_1" data-schematic-component-id="schematic_component_0"/><line x1="262.90913999672046" y1="410.72466185498484" x2="262.90913999672046" y2="243.68404128006608" stroke="rgb(132, 0, 0)" stroke-width="1.1931472898208486" data-schematic-line-id="schematic_line_2" data-schematic-component-id="schematic_component_0"/><line x1="262.90913999672046" y1="243.68404128006608" x2="24.27968203255091" y2="243.68404128006608" stroke="rgb(132, 0, 0)" stroke-width="1.1931472898208486" data-schematic-line-id="schematic_line_3" data-schematic-component-id="schematic_component_0"/></g><g class="schematic-port-hover" data-schematic-port-id="source_port_0"><circle cx="1114.30700459374" cy="277.12776697187" r="1.9042887868040002" fill="red" opacity="0"/></g><g class="schematic-port-hover" data-schematic-port-id="source_port_1"><circle cx="1114.30700459374" cy="286.64921090589" r="1.9042887868040002" fill="red" opacity="0"/></g><g class="schematic-port-hover" data-schematic-port-id="source_port_2"><circle cx="1114.30700459374" cy="296.17065483991" r="1.9042887868040002" fill="red" opacity="0"/></g><g class="schematic-port-hover" data-schematic-port-id="source_port_3"><circle cx="1114.30700459374" cy="305.69209877393" r="1.9042887868040002" fill="red" opacity="0"/></g><g class="schematic-port-hover" data-schematic-port-id="source_port_4"><circle cx="1171.43566819786" cy="305.69209877393" r="1.9042887868040002" fill="red" opacity="0"/></g><g class="schematic-port-hover" data-schematic-port-id="source_port_5"><circle cx="1171.43566819786" cy="296.17065483991" r="1.9042887868040002" fill="red" opacity="0"/></g><g class="schematic-port-hover" data-schematic-port-id="source_port_6"><circle cx="1171.43566819786" cy="286.64921090589" r="1.9042887868040002" fill="red" opacity="0"/></g><g class="schematic-port-hover" data-schematic-port-id="source_port_7"><circle cx="1171.43566819786" cy="277.12776697187" r="1.9042887868040002" fill="red" opacity="0"/></g><text x="143.59441101463585" y="195.95814968723212" fill="rgb(132, 0, 0)" text-anchor="middle" dominant-baseline="middle" font-family="sans-serif" font-size="14.317767477850184px" transform="rotate(0, 143.59441101463585, 195.95814968723212)">U</text><text x="143.59441101463585" y="219.82109548364912" fill="rgb(132, 0, 0)" text-anchor="middle" dominant-baseline="middle" font-family="sans-serif" font-size="14.317767477850184px" transform="rotate(0, 143.59441101463585, 219.82109548364912)">LM358</text></svg>
