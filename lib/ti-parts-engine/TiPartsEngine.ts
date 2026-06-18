@@ -2,11 +2,15 @@ import type { PartsEngine } from "@tscircuit/props";
 
 import { createUltraLibrarianBridgeClient } from "../ultra-librarian-bridge-client/index.ts";
 import type {
+  DownloadStepArchiveResponse,
   DownloadKicadArchiveResponse,
+  GetExportFormatsResponse,
   SearchPartsResponse,
 } from "../ultra-librarian-bridge-client/index.ts";
 import type {
+  DownloadStepArchiveParams,
   DownloadKicadArchiveParams,
+  GetExportFormatsParams,
   SearchPartsParams,
   TiPartsEngineOptions,
 } from "./types.ts";
@@ -20,7 +24,9 @@ export class TiPartsEngine implements PartsEngine {
   constructor(options: TiPartsEngineOptions = {}) {
     this.options = options;
     this.searchParts = this.searchParts.bind(this);
+    this.getExportFormats = this.getExportFormats.bind(this);
     this.downloadKicadArchive = this.downloadKicadArchive.bind(this);
+    this.downloadStepArchive = this.downloadStepArchive.bind(this);
     this.findPart = this.findPart.bind(this);
   }
 
@@ -57,10 +63,22 @@ export class TiPartsEngine implements PartsEngine {
     return await this.createClient().searchParts(request);
   }
 
+  async getExportFormats(
+    request: GetExportFormatsParams,
+  ): Promise<GetExportFormatsResponse> {
+    return await this.createClient().getExportFormats(request);
+  }
+
   async downloadKicadArchive(
     request: DownloadKicadArchiveParams,
   ): Promise<DownloadKicadArchiveResponse> {
     return await this.createClient().downloadKicadArchive(request);
+  }
+
+  async downloadStepArchive(
+    request: DownloadStepArchiveParams,
+  ): Promise<DownloadStepArchiveResponse> {
+    return await this.createClient().downloadStepArchive(request);
   }
 
   private createClient() {

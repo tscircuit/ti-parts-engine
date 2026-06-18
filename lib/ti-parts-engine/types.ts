@@ -1,8 +1,10 @@
 import type {
   BridgeFetch,
   BridgeLogger,
+  GetExportFormatsRequest,
   KicadExportRequest,
   SearchPartsRequest,
+  StepExportRequest,
 } from "../ultra-librarian-bridge-client/index.ts";
 
 export interface TiPartsEngineOptions {
@@ -14,7 +16,11 @@ export interface TiPartsEngineOptions {
 
 export interface SearchPartsParams extends SearchPartsRequest {}
 
+export interface GetExportFormatsParams extends GetExportFormatsRequest {}
+
 export interface DownloadKicadArchiveParams extends KicadExportRequest {}
+
+export interface DownloadStepArchiveParams extends StepExportRequest {}
 
 export interface TiPartsEngineSourceComponent {
   manufacturer_part_number?: string;

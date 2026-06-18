@@ -1,5 +1,9 @@
 import { DEFAULT_KICAD_VERSION } from "./types.ts";
-import type { KicadExportRequest, SearchPartsRequest } from "./types.ts";
+import type {
+  GetExportFormatsRequest,
+  KicadExportRequest,
+  SearchPartsRequest,
+} from "./types.ts";
 
 export function buildSearchPath(request: SearchPartsRequest) {
   const query = requireNonEmptyString("query", request.query);
@@ -27,6 +31,13 @@ export function buildKicadExportPath(request: KicadExportRequest) {
   });
 
   return `/v1/export/kicad?${params.toString()}`;
+}
+
+export function buildExportFormatsPath(request: GetExportFormatsRequest) {
+  const uid = requireNonEmptyString("uid", request.uid);
+  const params = new URLSearchParams({ uid });
+
+  return `/v1/export/formats?${params.toString()}`;
 }
 
 function requireNonEmptyString(name: string, value: string) {

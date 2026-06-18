@@ -7,7 +7,11 @@ export {
 export type {
   BridgeFetch,
   BridgeLogger,
+  DownloadStepArchiveResponse,
+  ExportFormatResult,
   DownloadKicadArchiveResponse,
+  GetExportFormatsRequest,
+  GetExportFormatsResponse,
   JsonObject,
   JsonPrimitive,
   JsonValue,
@@ -15,6 +19,7 @@ export type {
   SearchPartResult,
   SearchPartsRequest,
   SearchPartsResponse,
+  StepExportRequest,
   UltraLibrarianBridgeClient,
   UltraLibrarianBridgeClientOptions,
 } from "./types.ts";

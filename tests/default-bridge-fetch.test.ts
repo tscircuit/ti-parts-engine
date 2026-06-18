@@ -75,3 +75,64 @@ test("default bridge fetch uses the tscircuit dev-server proxy for browser cross
     });
   }
 });
+
+test("default bridge fetch preserves POST bodies for browser STEP export requests", async () => {
+  const originalFetch = globalThis.fetch;
+  const originalWindow = globalThis.window;
+  const calls: Array<{ input: string | URL; init?: RequestInit }> = [];
+  const requestBody = JSON.stringify({
+    uid: "fake-generated-lm358",
+    format: "step",
+  });
+
+  Object.defineProperty(globalThis, "window", {
+    configurable: true,
+    value: {
+      location: new URL("http://localhost:3020/#file=index.tsx"),
+      TSCIRCUIT_FILESERVER_API_BASE_URL: "http://localhost:3020",
+    },
+  });
+
+  globalThis.fetch = (async (input, init) => {
+    calls.push({ input: input as string | URL, init });
+    return new Response("ok");
+  }) as typeof fetch;
+
+  try {
+    const response = await createDefaultBridgeFetch()(
+      "https://ti-api-cors-proxy.seve.workers.dev/v1/export",
+      {
+        method: "POST",
+        body: requestBody,
+        headers: {
+          Accept: "application/zip",
+          Authorization: "Bearer secret-token",
+          "Content-Type": "application/json",
+        },
+      },
+    );
+
+    expect(await response.text()).toBe("ok");
+    expect(calls).toHaveLength(1);
+    expect(calls[0]!.input.toString()).toBe("http://localhost:3020/proxy");
+    expect(calls[0]!.init?.method).toBe("POST");
+    expect(calls[0]!.init?.body).toBe(requestBody);
+
+    const headers = new Headers(calls[0]!.init?.headers);
+    expect(headers.get("X-Target-Url")).toBe(
+      "https://ti-api-cors-proxy.seve.workers.dev/v1/export",
+    );
+    expect(headers.get("X-Sender-Origin")).toBe(
+      "https://ti-api-cors-proxy.seve.workers.dev",
+    );
+    expect(headers.get("Authorization")).toBe("Bearer secret-token");
+    expect(headers.get("Accept")).toBe("application/zip");
+    expect(headers.get("Content-Type")).toBe("application/json");
+  } finally {
+    globalThis.fetch = originalFetch;
+    Object.defineProperty(globalThis, "window", {
+      configurable: true,
+      value: originalWindow,
+    });
+  }
+});

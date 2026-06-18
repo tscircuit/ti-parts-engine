@@ -111,6 +111,82 @@ test("ti parts engine searches and downloads KiCad archives through the bridge A
   }
 });
 
+test("ti parts engine exposes 3D metadata, export formats, and STEP downloads through the bridge API", async () => {
+  const { fakeUlProxyUrl, server, capturedRequests } = await getTestServer();
+
+  try {
+    const tiPartsEngine = new TiPartsEngine({
+      partnerToken: "secret-token",
+      baseUrl: fakeUlProxyUrl,
+    });
+
+    const searchResponse = await tiPartsEngine.searchParts({ query: "LM358" });
+    const matchingPart = searchResponse.results[0];
+
+    expect(matchingPart).toMatchObject({
+      uid: "fake-generated-lm358",
+      mpn: "LM358",
+      manufacturer: "Fixture Manufacturer",
+      footprint_available: true,
+      symbol_available: true,
+      threed_available: true,
+      package: "generated-through-hole-8",
+    });
+
+    const uid = matchingPart?.uid;
+    if (!uid) {
+      throw new Error("Expected search result to include a uid");
+    }
+
+    const exportFormatsResponse = await tiPartsEngine.getExportFormats({ uid });
+    const stepArchiveResponse = await tiPartsEngine.downloadStepArchive({
+      uid,
+    });
+
+    expect(exportFormatsResponse.uid).toBe(uid);
+    expect(exportFormatsResponse.formats).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          id: "step",
+          cad_tool: "STEP",
+          file_type: "zip",
+        }),
+      ]),
+    );
+    expect(stepArchiveResponse.contentType).toBe("application/zip");
+    expect(
+      new TextDecoder().decode(toByteArray(stepArchiveResponse.archiveBuffer)),
+    ).toContain("ISO-10303-21");
+
+    expect(capturedRequests).toHaveLength(3);
+
+    const formatsRequest = getCapturedRequest(capturedRequests, 1);
+    expect(formatsRequest.pathname).toBe("/v1/export/formats");
+    expect(formatsRequest.search).toBe(`?uid=${uid}`);
+    expect(formatsRequest.method).toBe("GET");
+    expect(formatsRequest.headers.get("authorization")).toBe(
+      "Bearer secret-token",
+    );
+    expect(formatsRequest.headers.get("accept")).toBe("application/json");
+
+    const stepRequest = getCapturedRequest(capturedRequests, 2);
+    expect(stepRequest.pathname).toBe("/v1/export");
+    expect(stepRequest.search).toBe("");
+    expect(stepRequest.method).toBe("POST");
+    expect(stepRequest.headers.get("authorization")).toBe(
+      "Bearer secret-token",
+    );
+    expect(stepRequest.headers.get("accept")).toBe("application/zip");
+    expect(stepRequest.headers.get("content-type")).toBe("application/json");
+    expect(JSON.parse(stepRequest.body)).toEqual({
+      uid,
+      format: "step",
+    });
+  } finally {
+    await server.stop(true);
+  }
+});
+
 test("ti parts engine can search and download KiCad archives without a partner token", async () => {
   const { fakeUlProxyUrl, server, capturedRequests } = await getTestServer();
 

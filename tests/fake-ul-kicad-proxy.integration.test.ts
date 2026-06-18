@@ -25,9 +25,12 @@ test("ti parts engine integrates with the fake UL KiCad proxy GitHub dependency"
 
   expect(searchResponse.results).toHaveLength(1);
   expect(searchResponse.results[0]).toMatchObject({
+    uid: "fake-generated-lm358",
+    manufacturer: "Fixture Manufacturer",
     mpn: "LM358",
     footprint_available: true,
     symbol_available: true,
+    threed_available: true,
   });
   expect(archiveResponse.contentType).toBe("application/zip");
 
@@ -47,4 +50,34 @@ test("ti parts engine integrates with the fake UL KiCad proxy GitHub dependency"
 
   expect(readme).toContain("fake-ul-kicad-proxy");
   expect(readme).toContain("Requested MPN: LM358");
+});
+
+test("ti parts engine integrates with fake STEP exports and export formats", async () => {
+  const { fakeUlProxyUrl } = await getTestServer();
+  const tiPartsEngine = new TiPartsEngine({
+    partnerToken: "secret-token",
+    baseUrl: fakeUlProxyUrl,
+  });
+
+  const exportFormatsResponse = await tiPartsEngine.getExportFormats({
+    uid: "fake-generated-lm358",
+  });
+  const stepArchiveResponse = await tiPartsEngine.downloadStepArchive({
+    uid: "fake-generated-lm358",
+  });
+
+  expect(exportFormatsResponse.uid).toBe("fake-generated-lm358");
+  expect(exportFormatsResponse.formats).toEqual(
+    expect.arrayContaining([
+      expect.objectContaining({
+        id: "step",
+        cad_tool: "STEP",
+        file_type: "zip",
+      }),
+    ]),
+  );
+  expect(stepArchiveResponse.contentType).toBe("application/zip");
+  expect(
+    new TextDecoder().decode(toByteArray(stepArchiveResponse.archiveBuffer)),
+  ).toContain("ISO-10303-21");
 });

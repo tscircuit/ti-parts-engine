@@ -11,8 +11,10 @@ export {
 
 export { TiPartsEngine };
 export type {
+  DownloadStepArchiveParams,
   DownloadKicadArchiveParams,
   FindTiPartParams,
+  GetExportFormatsParams,
   SearchPartsParams,
   TiPartsEngineSourceComponent,
   TiPartsEngineOptions,

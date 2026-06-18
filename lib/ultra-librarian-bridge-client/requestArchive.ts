@@ -11,18 +11,29 @@ export async function requestArchive(options: {
   path: string;
   partnerToken?: string;
   logger?: BridgeLogger;
+  method?: "GET" | "POST";
+  body?: BodyInit;
+  requestContentType?: string;
+  errorLabel?: string;
 }): Promise<DownloadKicadArchiveResponse> {
   const url = buildRequestUrl(options.baseUrl, options.path);
-  logRequest(options.logger, url);
+  const method = options.method ?? "GET";
+  logRequest(options.logger, method, url);
 
   const response = await options.fetchImpl(url, {
-    headers: createBridgeHeaders(options.partnerToken, "application/zip"),
+    method,
+    body: options.body,
+    headers: createBridgeHeaders(
+      options.partnerToken,
+      "application/zip",
+      options.requestContentType,
+    ),
     redirect: "follow",
   });
 
   if (!response.ok) {
     throw new Error(
-      `KiCad export failed with ${response.status} ${response.statusText}: ${await readErrorBody(response)}`,
+      `${options.errorLabel ?? "KiCad export"} failed with ${response.status} ${response.statusText}: ${await readErrorBody(response)}`,
     );
   }
 
@@ -41,13 +52,21 @@ export async function requestArchive(options: {
   };
 }
 
-function createBridgeHeaders(partnerToken: string | undefined, accept: string) {
+function createBridgeHeaders(
+  partnerToken: string | undefined,
+  accept: string,
+  requestContentType?: string,
+) {
   const headers: Record<string, string> = {
     Accept: accept,
   };
 
   if (partnerToken) {
     headers.Authorization = `Bearer ${partnerToken}`;
+  }
+
+  if (requestContentType) {
+    headers["Content-Type"] = requestContentType;
   }
 
   return headers;
@@ -57,10 +76,14 @@ function buildRequestUrl(baseUrl: string, path: string) {
   return `${normalizeBaseUrl(baseUrl)}${path}`;
 }
 
-function logRequest(logger: BridgeLogger | undefined, url: string) {
+function logRequest(
+  logger: BridgeLogger | undefined,
+  method: string,
+  url: string,
+) {
   if (!logger) return;
   const requestUrl = new URL(url);
-  logger.log(`GET ${requestUrl.pathname}${requestUrl.search}`);
+  logger.log(`${method} ${requestUrl.pathname}${requestUrl.search}`);
 }
 
 async function readErrorBody(response: Response) {
